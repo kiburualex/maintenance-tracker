@@ -1,4 +1,7 @@
 body {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0;
     overflow-x: hidden;  
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -9,8 +12,8 @@ body {
 
 [class*="col-"] {
     float: left;
-    padding: 15px;
-    border: 1px solid red;
+    padding: 3px;
+    border: none;
 }
 
 /* For small scree */
@@ -101,7 +104,6 @@ body {
     width: 100%;
     background: #2f3036;
 }
-
 #logo {
     float: left;
 }
@@ -114,7 +116,7 @@ ul {
     background-color: #333;
 }
 li {
-    float: right;
+    float: left;
     margin-right: 1px;
 }
 /*Style for menu links*/
@@ -168,4 +170,36 @@ input[type=checkbox]:checked ~ #menu{
     .show-menu {
         display:block;
     }
+}
+
+.slider {
+    padding: 20vh 10px 5vh 10px;
+    text-align: center;
+    background-image: url("/images/slider.jpg");
+    background-color: lightslategrey;
+    background-size: cover;
+    height: 92vh; 
+}
+
+#welcome-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 2.8em;
+    font-style: oblique;
+}
+
+button {
+    height: 35px;
+}
+
+.btn-success {
+    background-color: green;
+}
+.btn-primary {
+    background-color: darkgray;
+}
+btn-danger {
+    background-color: firebrick;
+}
+btn-warning {
+    background-color: goldenrod;
 }
