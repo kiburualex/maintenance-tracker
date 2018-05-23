@@ -176,7 +176,7 @@ input[type=checkbox]:checked ~ #menu{
 .slider {
     padding: 20vh 10px 5vh 10px;
     text-align: center;
-    background-image: url("/images/slider.jpg");
+    background-image: url("../images/slider.jpg");
     background-color: lightslategrey;
     background-size: cover;
     height: 92vh; 
