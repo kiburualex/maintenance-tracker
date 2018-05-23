@@ -241,7 +241,7 @@ btn-warning {
 
 .form-header{
     border-bottom-color: grey;
-    border-bottom-width: 2px;
+    border-bottom-width: 1px;
     border-bottom-style: groove;
     margin: 10px;
 }
@@ -253,7 +253,24 @@ input{
     height: 50px;
     border-top: none;
     border-left: none;
+}
+textarea{
+    width: 100%;
+    border-top: none;
+    border-left: none;
+    margin-top: 5px;
+}
+select{
+    width: 100%;
+    height: 50px;
+    border-top: none;
+    border-left: none;
     border-right: none;
+    margin-top: 5px;
+    background: #fff;
+}
+#form-label {
+    color: #50c0e0
 }
 
 span a {
