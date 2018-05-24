@@ -3,7 +3,7 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Maintenance Tracker App</title>
-        <link rel="stylesheet" href="../css/styles.css">
+        <link rel="stylesheet" href="../../assets/css/styles.css">
         
     </head>
     <body>
@@ -13,25 +13,46 @@
          
             <ul id="menu">
                 
-               <li id="logo"><a href="../index.html">Maintenance</a></li>
+               <li id="logo"><a href="#">Maintenance</a></li>
                            
-               <li><a href="../index.html">Home</a></li>
-               <li><a href="../pages/my-requests.html">My Requests </a></li>
-               <li><a href="../pages/request-form.html">Request Service </a></li>
-               <li id="login"><a href="../index.html">Log Out</a></li> 
+               <li><a href="dashboard.html">Dashboard</a></li>
+               <li><a href="requests.html">Service Requests </a></li>
+               <li><a href="users.html">Registered Users </a></li>
+               <li id="login"><a href="../../index.html">Log Out</a></li> 
             </ul>
         </div> <!-- navigation menu ends -->
 
         <!--
-            page content start
+            Dashboard page content start
         -->
-        <div class="cover">
-         <div class="content">
-            <div class="page-title">
-                <h3>My Requests History</h3>
+        
+        <div class="admin-container">
+            <div class="row">
+                <div class="col-lg-4 col-sm-12">
+                    <div class="admin-item">
+                        <span>3</span>
+                        <h4>New Requests</h4>
+                        <a href="requests.html"><button class="btn-success">View</button></a>
+                    </div> 
+                </div>
+                <div class="col-lg-4 col-sm-12">
+                    <div class="admin-item">
+                        <span>10</span>
+                        <h4>Pending Requests</h4>
+                        <a href="requests.html"><button class="btn-success">View</button></a>
+                    </div> 
+                </div>
+                <div class="col-lg-4 col-sm-12">
+                    <div class="admin-item">
+                        <span>23</span>
+                        <h4>Registered Users</h4>
+                        <a href="users.html"><button class="btn-success">View</button></a>
+                    </div> 
+                </div>
             </div>
             
             <div class="request">
+                    <div class="table-title">New Requests</div>
                <table >
                   <thead>
                     <tr>
@@ -54,27 +75,24 @@
                     <tr>
                       <td>2</td>
                       <td>Maintenance</td>
-                      <td>15/4/2018 10:00 AM</td>
+                      <td>1/6/2018 10:00 AM</td>
                       <td>We Need Maintenance on our companies' air conditioners .<a href="request.html">View</a> </td>
-                      <td id="status-cancelled">Cancelled</td>
+                      <td id="status-pending">Pending</td>
                     </tr>
                     <tr>
                       <td>3</td>
                       <td>Repair</td>
-                      <td>10/4/2018 11:00 AM</td>
+                      <td>1/6/2018 11:00 AM</td>
                       <td>Our air conditioner broke down, we need an urgent fix from your team.<a href="request.html">View</a> </td>
-                      <td id="status-resolved">Resolved</td>
+                      <td id="status-pending">Pending</td>
                     </tr>
                      
                   </tbody>
 
                </table>
-               <div >
-                    <a href="request-form.html"><button class="btn-success">Place A New Request</button></a>
-                </div>
+ 
             </div>
-         </div>
         </div>
-
+      
     </body>
 </html>
