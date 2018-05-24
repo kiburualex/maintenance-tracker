@@ -1,10 +1,17 @@
 body {
-    background-color: #EBEBEB;
     margin-left: 0px;
     margin-right: 0px;
     margin-top: 0;
+    background-image: url("../images/pic07.jpg");
+    background-color: lightslategrey;
+    background-size: cover;
     overflow-x: hidden;  
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.cover {
+    height: 100vh;
+    width: 100%;
+    color: #fff;
 }
 
 *{
@@ -103,7 +110,6 @@ body {
 
 .nav {
     width: 100%;
-    background: #fff;
 }
 #logo {
     float: left;
@@ -114,7 +120,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #fff;
+    background-color: none;
 }
 li {
     float: left;
@@ -126,8 +132,9 @@ li a {
     min-width:140px;
     height: 50px;
     text-align: center;
-    line-height: 50px;color: #333;
-    background: #fff;
+    line-height: 50px;
+    color: #fff;
+    background: none;
     text-decoration: none;
 }
 /*Hover state for menu links*/
@@ -176,16 +183,13 @@ input[type=checkbox]:checked ~ #menu{
 .slider {
     padding: 20vh 10px 5vh 10px;
     text-align: center;
-    background-image: url("../images/slider.jpg");
-    background-color: lightslategrey;
-    background-size: cover;
-    height: 92vh; 
 }
 
 #welcome-title {
     font-family: 'Times New Roman', Times, serif;
     font-size: 2.8em;
     font-style: oblique;
+    
 }
 
 button {
@@ -211,8 +215,16 @@ btn-warning {
 .content {
     margin-left: 15vw;
     margin-right: 15vw;
-    padding-bottom: 10px; 
-    background-color: #fff;
+    margin-top: 10px;
+    padding: 5px 10px 10px 10px; 
+}
+@media screen and (max-width : 760px){
+    .content {
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 10px;
+        padding: 5px 10px 10px 10px; 
+    } 
 }
 
 .page-title {
@@ -226,16 +238,19 @@ btn-warning {
 }
 
 .form {
-    margin-left: 20vw;
-    margin-right: 20vw;
+    margin-left: 10vw;
+    margin-right: 10vw;
     margin-bottom: 10px;
     padding: 10px;
+    background-color: rgba(27, 31, 34, 0.85);
+    color: #fff;
 }
 @media screen and (max-width : 760px){
     .form {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
         margin-bottom: 10px;
+        background-color: rgba(27, 31, 34, 0.85);
     }
 }
 
@@ -246,19 +261,25 @@ btn-warning {
     margin: 10px;
 }
 form {
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
+    padding: 20px; 
 }
 input{
     width: 100%;
     height: 50px;
+    padding-left: 5px;
     border-top: none;
     border-left: none;
+    background-color: rgba(27, 31, 34, 0.85);
+    color: #fff;
 }
 textarea{
     width: 100%;
     border-top: none;
     border-left: none;
     margin-top: 5px;
+    background-color: rgba(27, 31, 34, 0.85);
+    color: #fff;
 }
 select{
     width: 100%;
@@ -267,13 +288,41 @@ select{
     border-left: none;
     border-right: none;
     margin-top: 5px;
-    background: #fff;
+    background-color: rgba(27, 31, 34, 0.85);
+    color: #fff;
 }
 #form-label {
     color: #50c0e0
 }
 
 span a {
-    color : rgb(34, 30, 30);
+    color : #fff;
     margin:5px;
+}
+a {
+    color: #fff;
+}
+.request {
+    background: rgba(27, 31, 34, 0.85);
+    padding: 10px;
+}
+.request-details {
+    border-right: 2px;
+    border-right-style: ridge;
+}
+.request-details h4 span {
+    color: rgb(206, 203, 203);
+    font-style: italic;
+}
+.request-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 2.0em;
+}
+.user-details {
+    border-right: 2px;
+    border-right-style: ridge;
+}
+.user-details h4 span {
+    color: rgb(206, 203, 203);
+    font-style: italic;
 }
