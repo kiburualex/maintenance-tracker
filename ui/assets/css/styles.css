@@ -361,12 +361,35 @@ tbody tr td a{
 }
 
 .admin-container {
-    padding: 20vh 10px 5vh 10px;
+    padding: 12vh 10vw 5vh 10vw;
     text-align: center;
+    color: #fff;
     
 }
 
 .admin-item {
     background-color: bisque;
     background-size: cover;
+    padding: 20px 20px 20px 20px;
+    margin: 5px 20px 5px 20px;
+}
+
+.admin-item span {
+    background: #19c589;
+    padding: 15px;
+    border-radius: 50%;
+}
+
+.admin-item h4 {
+    color: #000;
+}
+
+.admin-container .request {
+    margin-top: 20px;
+}
+
+.table-title {
+    text-align: left;
+    margin: 10px;
+    color: #19c589;
 }
