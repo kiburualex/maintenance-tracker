@@ -359,3 +359,14 @@ tbody tr td a{
 #status-resolved {
     color: #19c5b7;
 }
+
+.admin-container {
+    padding: 20vh 10px 5vh 10px;
+    text-align: center;
+    
+}
+
+.admin-item {
+    background-color: bisque;
+    background-size: cover;
+}
