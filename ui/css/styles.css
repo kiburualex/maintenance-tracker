@@ -326,3 +326,36 @@ a {
     color: rgb(206, 203, 203);
     font-style: italic;
 }
+
+table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+thead {
+    margin: 5px;
+}
+thead tr th {
+    background-color: rgb(56, 55, 55);
+    padding: 5px 5px 5px 5px;
+}
+tbody tr {
+    margin: 10px;
+}
+tbody tr td {
+    background-color: rgb(56, 55, 55);
+    padding: 5px 5px 5px 5px;
+}
+tbody tr td a{
+   color: blue;
+}
+
+
+#status-pending {
+    color: #19c589;
+}
+#status-cancelled {
+    color: #c58f19;
+}
+#status-resolved {
+    color: #19c5b7;
+}
