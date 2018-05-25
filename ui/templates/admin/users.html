@@ -1,0 +1,87 @@
+<!Doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Maintenance Tracker App</title>
+        <link rel="stylesheet" href="../../assets/css/styles.css">
+        
+    </head>
+    <body>
+        <div class="nav"> <!-- Navigation Menu Starts -->
+            <label for="show-menu" class="show-menu">Show Menu</label>
+            <input type="checkbox" id="show-menu" role="button">
+         
+            <ul id="menu">
+                
+               <li id="logo"><a href="#">Maintenance</a></li>
+                           
+               <li><a href="dashboard.html">Dashboard</a></li>
+               <li><a href="requests.html">Service Requests </a></li>
+               <li><a href="users.html">Registered Users </a></li>
+               <li id="login"><a href="../../index.html">Log Out</a></li> 
+            </ul>
+        </div> <!-- navigation menu ends -->
+
+        <!--
+            Dashboard page content start
+        -->
+        
+        <div class="admin-content">
+            
+            <div class="request">
+                    <div class="table-title">All Registered Users</div>
+               <table >
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Email Address</th>
+                      <th>Role</th>
+                      <th>isVerified</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>Fred Belek</td>
+                      <td>fred@gmail.com</td>
+                      <td>Admin </td>
+                      <td>True</td>
+                      <td><button class="btn-warning">Revoke Admin Rights</button></td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Julie Alex</td>
+                      <td>julie34@gmail.com</td>
+                      <td>Consultant </td>
+                      <td>True</td>
+                      <td><button class="btn-success">Grant Admin Rights</button></td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>Mark Bett</td>
+                      <td>info@mark.com</td>
+                      <td>User </td>
+                      <td>True</td>
+                      <td><button class="btn-primary">Block</button></td>
+                    </tr>
+                    <tr>
+                      <td>4</td>
+                      <td>Susan Blue</td>
+                      <td>info@blue.com</td>
+                      <td>User </td>
+                      <td>False</td>
+                      <td><button class="btn-danger">Remove</button></td>
+                    </tr>
+                     
+                  </tbody>
+
+               </table>
+ 
+            </div>
+        </div>
+      
+    </body>
+</html>
