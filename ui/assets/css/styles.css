@@ -393,3 +393,10 @@ tbody tr td a{
     margin: 10px;
     color: #19c589;
 }
+
+.admin-content {
+    padding: 8vh 10vw 5vh 10vw;
+    text-align: center;
+    color: #fff;
+    
+}

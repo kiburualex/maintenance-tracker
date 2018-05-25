@@ -1,0 +1,117 @@
+<!Doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Maintenance Tracker App</title>
+        <link rel="stylesheet" href="../../assets/css/styles.css">
+        
+    </head>
+    <body>
+        <div class="nav"> <!-- Navigation Menu Starts -->
+            <label for="show-menu" class="show-menu">Show Menu</label>
+            <input type="checkbox" id="show-menu" role="button">
+         
+            <ul id="menu">
+                
+               <li id="logo"><a href="#">Maintenance</a></li>
+                           
+               <li><a href="dashboard.html">Dashboard</a></li>
+               <li><a href="requests.html">Service Requests </a></li>
+               <li><a href="users.html">Registered Users </a></li>
+               <li id="login"><a href="../../index.html">Log Out</a></li> 
+            </ul>
+        </div> <!-- navigation menu ends -->
+
+        <!--
+            Dashboard page content start
+        -->
+        
+        <div class="admin-content">
+            
+            <div class="request">
+                    <div class="table-title">All Requests</div>
+               <table >
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Type</th>
+                      <th>Date</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>Maintenance</td>
+                      <td>30/5/2018 10:00 AM</td>
+                      <td>We Need Maintenance on our companies' air conditioners .<a href="request.html">View</a> </td>
+                      <td id="status-pending">Pending</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Maintenance</td>
+                      <td>1/6/2018 10:00 AM</td>
+                      <td>We Need Maintenance on our companies' air conditioners .<a href="request.html">View</a> </td>
+                      <td id="status-pending">Pending</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>Repair</td>
+                      <td>1/6/2018 11:00 AM</td>
+                      <td>Our air conditioner broke down, we need an urgent fix from your team.<a href="request.html">View</a> </td>
+                      <td id="status-pending">Pending</td>
+                    </tr>
+                    <tr>
+                      <td>4</td>
+                      <td>Maintenance</td>
+                      <td>11/3/2018 12:00 PM</td>
+                      <td>We Need Maintenance on our companies' air conditioners .<a href="request.html">View</a> </td>
+                      <td id="status-resolved">Resolved</td>
+                    </tr>
+                    <tr>
+                      <td>5</td>
+                      <td>Repair</td>
+                      <td>1/3/2018 03:30 PM</td>
+                      <td>Our air conditioner broke down, we need an urgent fix from your team.<a href="request.html">View</a> </td>
+                      <td id="status-resolved">Resolved</td>
+                    </tr>
+                    <tr>
+                      <td>6</td>
+                      <td>Maintenance</td>
+                      <td>4/2/2018 11:00 AM</td>
+                      <td>We Need Maintenance on our companies' air conditioners .<a href="request.html">View</a> </td>
+                      <td id="status-resolved">Resolved</td>
+                    </tr>
+                    <tr>
+                      <td>7</td>
+                      <td>Repair</td>
+                      <td>10/4/2018 08:00 AM</td>
+                      <td>Our air conditioner broke down, we need an urgent fix from your team.<a href="request.html">View</a> </td>
+                      <td id="status-resolved">Resolved</td>
+                    </tr>
+                    <tr>
+                      <td>8</td>
+                      <td>Maintenance</td>
+                      <td>8/3/2018 10:00 AM</td>
+                      <td>We Need Maintenance on our companies' air conditioners .<a href="request.html">View</a> </td>
+                      <td id="status-cancelled">Cancelled</td>
+                    </tr>
+                    <tr>
+                      <td>9</td>
+                      <td>Repair</td>
+                      <td>9/3/2018 03:00 PM</td>
+                      <td>Our air conditioner broke down, we need an urgent fix from your team.<a href="request.html">View</a> </td>
+                      <td id="status-cancelled">Cancelled</td>
+                    </tr>
+                     
+                  </tbody>
+
+               </table>
+ 
+            </div>
+        </div>
+      
+    </body>
+</html>
