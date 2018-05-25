@@ -425,5 +425,6 @@ tbody tr td a{
 .feedback-form textarea {
     height: 80px;
     background: #fff;
+    color: #000;
     padding: 10px;
 }
