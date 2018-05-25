@@ -407,6 +407,11 @@ tbody tr td a{
 .filter .col-lg-2 {
     margin-right: -10px;
 }
+.filter input {
+    font-size: 1.4em;
+    background-color: rgb(24, 19, 19);
+    padding-left: 10px;
+}
 .filter button {
     float: left;
     height: 50px;
