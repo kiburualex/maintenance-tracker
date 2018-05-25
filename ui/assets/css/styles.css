@@ -422,3 +422,9 @@ tbody tr td a{
     float: right;
     margin: 0px 5px 0px 5px;
 }
+.feedback-form textarea {
+    height: 80px;
+    background: #fff;
+    color: #000;
+    padding: 10px;
+}
