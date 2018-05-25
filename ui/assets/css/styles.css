@@ -205,10 +205,10 @@ button {
 .btn-primary {
     background-color: darkgray;
 }
-btn-danger {
+.btn-danger {
     background-color: firebrick;
 }
-btn-warning {
+.btn-warning {
     background-color: goldenrod;
 }
 
