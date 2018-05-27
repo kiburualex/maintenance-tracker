@@ -4,19 +4,19 @@ Maintenance Tracker App is an application that provides users with the ability t
 
 # Usage 
 
- Visit https://desshub.github.io/maintenance-tracker/ui/index.html
+ Visit [Maintenance App](https://desshub.github.io/maintenance-tracker/ui/index.html)
  
 ## User Endpoints :
-   1. /templates/user/request-form.html
-   2. /templates/user/my-requests.html
-   3. /templates/auth/login.html
-   4. /templates/auth/signup.html
+   1. [Request Form](https://desshub.github.io/maintenance-tracker/ui/templates/user/request-form.html)
+   2. [User Requests](https://desshub.github.io/maintenance-tracker/ui/templates/user/my-requests.html)
+   3. [Login Form](https://desshub.github.io/maintenance-tracker/ui/templates/auth/login.html)
+   4. [Sign Up Form](https://desshub.github.io/maintenance-tracker/ui/templates/auth/signup.html)
  
 ## Admin Endpoints :
-   1. /templates/admin/dashboard.html
-   2. /templates/admin/requests.html
-   3. /templates/admin/request.html
-   4. /templates/admin/users.html
+   1. [Admin Dashboard](https://desshub.github.io/maintenance-tracker/ui/templates/admin/dashboard.html)
+   2. [Requests From Users](https://desshub.github.io/maintenance-tracker/ui/templates/admin/requests.html)
+   3. [Single Request Page](https://desshub.github.io/maintenance-tracker/ui/templates/admin/request.html)
+   4. [Users Page](https://desshub.github.io/maintenance-tracker/ui/templates/admin/users.html)
 
 # How To Manually Test It:
 
