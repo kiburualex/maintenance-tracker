@@ -346,7 +346,11 @@ tbody tr td {
     padding: 5px 5px 5px 5px;
 }
 tbody tr td a{
-   color: blue;
+   color: #fff;
+   text-decoration: none;
+}
+tbody tr td:hover a{
+   color: #19c589;
 }
 
 
@@ -405,7 +409,7 @@ tbody tr td a{
     margin: 0px 20px 1px 20px; 
 }
 .filter .col-lg-2 {
-    margin-right: -10px;
+    margin-right: -4px;
 }
 .filter input {
     font-size: 1.4em;
