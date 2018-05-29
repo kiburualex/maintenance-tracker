@@ -16,7 +16,7 @@ class TestBase(TestCase):
         app = create_app(config_name)
         return app
 
-class UserTests(TestCase):
+class RequestTests(TestCase):
     """Define and setup testing class"""
 
     def setUp(self):
@@ -42,4 +42,22 @@ class UserTests(TestCase):
     	res = self.request.create("maintenance", "request descriptions",\
          "location", "pending", "2018-6-5", "10:20 AM", "1",)
     	self.assertEqual(res, "Request already exists")
+
+    def test_request_filter(self):
+    	"""Test if filter by userid works"""
+    	self.request.create("maintenance", "request descriptions",\
+         "location", "pending", "2018-6-5", "10:20 AM", "1",)
+    	self.request.create("maintenance", "request descriptions",\
+         "location", "pending", "2018-6-5", "10:20 AM", "2",)
+    	res = self.request.request_filter("1")
+    	request_description = res[0]['description']
+    	self.assertIs(request_description, "request descriptions")
+
+    def test_filter_by_id(self):
+        """Test if the method finds the exactly specified id"""
+        self.request.create("maintenance", "request descriptions", "location", "pending", "2018-6-5", "10:20 AM", "1",)
+        request_id = self.request.request_list[0]['id']
+        requesttype = self.request.request_list[0]['type']
+        foundrequest = self.request.find_by_id(request_id)
+        self.assertEqual(foundrequest['type'], requesttype)
     
