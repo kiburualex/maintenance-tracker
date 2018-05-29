@@ -40,3 +40,14 @@ class UserTests(TestCase):
         res = self.user.register("desmond", "desmond@mail.com", "pass1234", "pass1234")
         self.assertEqual(res, "Username already exists.")
 
+    @pytest.fixture(scope='module')
+    def test_password_length(self):
+        """Test to ensure that a user has a strong password"""
+        res = self.user.register("desmond", "desmond@mail.com", "pass", "pass")
+        self.assertEqual(res, "Password too short")
+
+    @pytest.fixture(scope='module')
+    def test_password_match(self):
+        """Test if password matching is working"""
+        res = self.user.register("desmond", "desmond@mail.com", "pass1234", "patyt1233")
+        self.assertEqual(res, "passwords do not match")
