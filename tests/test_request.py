@@ -52,4 +52,12 @@ class RequestTests(TestCase):
     	res = self.request.request_filter("1")
     	request_description = res[0]['description']
     	self.assertIs(request_description, "request descriptions")
+
+    def test_filter_by_id(self):
+        """Test if the method finds the exactly specified id"""
+        self.request.create("maintenance", "request descriptions", "location", "pending", "2018-6-5", "10:20 AM", "1",)
+        request_id = self.request.request_list[0]['id']
+        requesttype = self.request.request_list[0]['type']
+        foundrequest = self.request.find_by_id(request_id)
+        self.assertEqual(foundrequest['type'], requesttype)
     
