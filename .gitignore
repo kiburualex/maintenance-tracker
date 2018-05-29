@@ -4,6 +4,7 @@ venv/
 VENV/
 
 .pytest_cache
+.vscode
 
 #dot.py files
 *.pyc
