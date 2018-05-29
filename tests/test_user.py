@@ -33,3 +33,10 @@ class UserTests(TestCase):
         res = self.user.register("desmond", "desmond@mail.com", "pass1234", "pass1234")
         self.assertEqual(res, "Registration successfull")
     
+    @pytest.fixture(scope='module')
+    def test_existing_user(self):
+        """Test with an already existing user, try registering a user twice"""
+        self.user.register("desmond", "desmond@mail.com", "pass1234", "pass1234")
+        res = self.user.register("desmond", "desmond@mail.com", "pass1234", "pass1234")
+        self.assertEqual(res, "Username already exists.")
+
