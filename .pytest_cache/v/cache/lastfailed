@@ -1,1 +1,6 @@
-{}
+{
+  "tests/test_user.py::UserTests::test_existing_user": true, 
+  "tests/test_user.py::UserTests::test_isuccessful_registration": true, 
+  "tests/test_user.py::UserTests::test_password_length": true, 
+  "tests/test_user.py::UserTests::test_password_match": true
+}
