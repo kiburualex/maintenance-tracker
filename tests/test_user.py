@@ -2,8 +2,6 @@
 import pytest
 import os
 
-from flask_testing import TestCase
-
 from app import create_app
 from app.user import User_details
 

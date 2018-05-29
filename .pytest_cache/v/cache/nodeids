@@ -1,7 +1,0 @@
-[
-  "tests/test_sample.py::test_answer", 
-  "tests/test_user.py::UserTests::test_existing_user", 
-  "tests/test_user.py::UserTests::test_isuccessful_registration", 
-  "tests/test_user.py::UserTests::test_password_length", 
-  "tests/test_user.py::UserTests::test_password_match"
-]

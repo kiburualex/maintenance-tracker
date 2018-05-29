@@ -3,6 +3,8 @@
 venv/
 VENV/
 
+.pytest_cache
+
 #dot.py files
 *.pyc
 
@@ -16,3 +18,4 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+
