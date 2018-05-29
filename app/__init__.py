@@ -9,6 +9,7 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
     
-    from app import user
+    from app import user, request
+
 
     return app
