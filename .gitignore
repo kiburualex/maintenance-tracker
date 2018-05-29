@@ -1,7 +1,7 @@
 # virtualenv
 .venv
 venv/
-ENV/
+VENV/
 
 #dot.py files
 *.pyc
