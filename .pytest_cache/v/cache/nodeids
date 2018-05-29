@@ -1,1 +1,4 @@
-[]
+[
+  "tests/test_sample.py::test_mytest", 
+  "tests/test_sample.py::test_answer"
+]
