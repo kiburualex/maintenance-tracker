@@ -30,6 +30,16 @@ class UserTests(TestCase):
     @pytest.fixture(scope='module')
     def test_isuccessful_created(self):
         """Test if request can create sucessfully with correct fields"""
-        res = self.request.create("maintenance", "request descriptions", "pending", "2018-6-5", "10:20 AM", "1",)
+        res = self.request.create("maintenance", "request descriptions", "location", "pending", "2018-6-5", "10:20 AM", "1",)
         self.assertEqual(res, "Created successfull")
+
+    def test_create_existing_request(self):
+    	""" Test if a request can be created twice"""
+    	
+    	self.request.request_list = [{"type" :'maintenance', "description" :'request descriptions',\
+         "location":"CBD",  "status":'pending', \
+         "date" : '2018-6-5', "time" : "10:20 AM", "userid":'1'}]
+    	res = self.request.create("maintenance", "request descriptions",\
+         "location", "pending", "2018-6-5", "10:20 AM", "1",)
+    	self.assertEqual(res, "Request already exists")
     
