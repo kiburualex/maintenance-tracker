@@ -46,5 +46,12 @@ class Requests(object):
 		else:
 			return False
 
+	def valid_description(self, description):
+		"""check description length and special characters"""
+		if len(description) < 10 or not re.match("^[a-zA-Z0-9_ ]*$", description):
+			return False
+		else:
+			return True
+
 
       
