@@ -37,5 +37,16 @@ class User_details(object):
                 self.user_list.append(user_details)
                 return "Registration successfull"
 
+    def login(self, username, password):
+        """A method to login a user given valid user details"""
+        for user in self.user_list:
+            if username == user['username']:
+                if password == user['password']:
+                    return "successful"
+                else:
+                    return "wrong password"
+                    break
+        return "user does not exist"
+
 
         

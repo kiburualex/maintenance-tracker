@@ -7,15 +7,15 @@ from . import api
 user_object = User_details()
 
 @api.route('/')
-def homepage():
+def index():
     """
-    Render Homepage  on the / route
+    Index route test
     """
     return "hello"
 
 @api.route('/register', methods=['GET','POST'])
 def register():
-	"""A route to handle user"""
+	"""A route to handle user registration"""
 	if request.method == 'POST':
 		user_details = request.get_json()
 		username = user_details['username']
