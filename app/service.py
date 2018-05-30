@@ -4,10 +4,10 @@ from datetime import date, datetime
 import uuid
 
 class Services(object):
-	""" A class to handle actions related to events"""
+	""" A class to handle actions related to requests"""
 
 	def __init__(self):
-		"""define an empty list to hold all the event objects"""
+		"""define an empty list to hold all the requests objects"""
 		self.request_list = []
 
 	def existing_request(self, category, userid, date):
@@ -55,6 +55,11 @@ class Services(object):
 				self.request_details['id'] = uuid.uuid1()
 				self.request_list.append(self.request_details)
                 return "Request Send"
+
+	def view_all(self, userid):
+		""" A method to return a list of all requests"""
+		user_requests = [request for request in self.request_list if request['userid'] == userid]
+		return user_requests
 
 
 
