@@ -10,5 +10,32 @@ class User_details(object):
         # A list to hold all user objects
         self.user_list = []
 
+    def register(self, username, email, password, cnfpassword):
+        """A method to register users with correct and valid details"""
+
+        # empty dict to hold dgtails of the user to be created
+        user_details = {}
+        # checkif a user with that username exists
+        for user in self.user_list:
+            if username == user['username']:
+                return "Username already exists."
+                break
+        else:
+            #validate password and username
+            if not re.match("^[a-zA-Z0-9_]*$", username):
+                return "Username can only contain alphanumeric characters"
+            elif password != cnfpassword:
+                return "passwords do not match"
+            elif len(password) < 6:
+                return "Password too short"     
+            else:
+                #register user if all the details are valid
+                user_details['username'] = username
+                user_details['email'] = email
+                user_details['password'] = password
+                user_details['id'] = uuid.uuid1()
+                self.user_list.append(user_details)
+                return "Registration successfull"
+
 
         
