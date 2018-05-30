@@ -35,5 +35,16 @@ class Requests(object):
 				self.event_list.append(self.event_details)
 				return "Reuest Send"
 
+	def existing_request(self, category, userid, date):
+		"""A method to check if a request has already been placed"""
+		for request in self.request_list:
+			#test to see if the user has already send simmilar requests 
+			if request['category'] == category and request['userid'] == userid:
+				if request['date'] == date:
+					return True
+					break
+		else:
+			return False
+
 
       
