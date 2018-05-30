@@ -67,3 +67,10 @@ def userrequests():
 			return jsonify(response = res), 409
 	requests = request_object.view_all(userid)
 	return jsonify(requests), 200
+
+@api.route('/requests/<reqid>', methods = ['GET', 'POST'])
+def get_request(reqid):
+	id = uuid.UUID(reqid)
+	requests = request_object.find_by_id(id)
+	return jsonify(requests), 200
+
