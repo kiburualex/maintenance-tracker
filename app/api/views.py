@@ -65,4 +65,5 @@ def userrequests():
 			return jsonify(response=res), 201
 		else:
 			return jsonify(response = res), 409
-	return jsonify(response="Get request currently not allowed"), 405
+	requests = request_object.view_all(userid)
+	return jsonify(requests), 200
