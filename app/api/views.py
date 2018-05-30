@@ -1,5 +1,6 @@
 import uuid
-from app.user import User_details, Requests
+from app.user import User_details
+from app.request import Requests
 from flask import request, json , jsonify, url_for, session, abort
 
 from . import api
