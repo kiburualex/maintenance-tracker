@@ -1,6 +1,6 @@
 import uuid
 from app.user import User_details
-from flask import request, json , jsonify, url_for, session,abort
+from flask import request, json , jsonify, url_for, session, abort
 
 from . import api
 
@@ -29,4 +29,22 @@ def register():
 		else:
 			return jsonify(response = res),409
 	return jsonify(response="Get request currently not allowed"),405
+
+@api.route('/login', methods=['GET','POST'])
+def login():
+    """
+    A route to handle user login
+    """
+    if request.method == 'POST':
+		user_details = request.get_json()
+		username = user_details['username']
+		password = user_details['password']
+		res = user_object.login(username, password)
+		if res == "successful":
+			for user in user_object.user_list:
+				if user['username'] == username:
+					session['userid'] = user['id']
+					return jsonify(response ="login successful"), 200
+		return res
+    return jsonify(response="Get request currently not allowed"), 405
 

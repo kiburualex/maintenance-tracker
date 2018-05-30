@@ -12,6 +12,7 @@ class DevelopmentConfig(Config):
     """
 
     DEBUG = True
+    SECRET_KEY = "itsasecret"
 
 class ProductionConfig(Config):
     """
