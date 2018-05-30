@@ -1,10 +1,11 @@
 import uuid
-from app.user import User_details
+from app.user import User_details, Requests
 from flask import request, json , jsonify, url_for, session, abort
 
 from . import api
 
 user_object = User_details()
+request_object = Requests()
 
 @api.route('/')
 def index():
@@ -47,4 +48,24 @@ def login():
 					return jsonify(response ="login successful"), 200
 		return res
     return jsonify(response="Get request currently not allowed"), 405
+
+#############
+# Request Routes
+############
+@api.route('/requests', methods = ['GET', 'POST'])
+def requests():
+	if request.method == 'POST':
+        
+		request_details = request.get_json()
+		category = request_details['category']
+		description = request_details['description']
+		location = request_details['location']
+		date = request_details['date']
+		time = request_details['time']
+		res = request_object.create(category, description, location, date, time, status="status", userid=session['userid'])
+		if res == "Request created":
+			return jsonify(response=res), 201
+		else:
+			return jsonify(response = res), 409
+	return jsonify(response="Get request currently not allowed"), 405
 
