@@ -53,5 +53,12 @@ class Requests(object):
 		else:
 			return True
 
+	def valid_date(self, date):
+		"""Check if the given date is less than the current date"""
+		date = datetime.strptime(date, '%Y-%m-%d').date()
+		if date < date.today():
+			return False
+		return True
+
 
       
