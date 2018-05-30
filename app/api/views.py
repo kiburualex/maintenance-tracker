@@ -11,10 +11,10 @@ user_object = User_details()
 
 @api.route('/')
 def index():
-    """
-    Index route test
-    """
-    return "hello"
+	"""
+	Index route test
+	"""
+	return "hello"
 
 @api.route('/register', methods=['POST'])
 def register():
@@ -34,26 +34,26 @@ def register():
 
 @api.route('/login', methods=['POST'])
 def login():
-    """
-    A route to handle user login
-    """
-    user_details = request.get_json()
-    username = user_details['username']
-    password = user_details['password']
-    res = user_object.login(username, password)
-    if res == "successful":
+	"""
+	A route to handle user login
+	"""
+	user_details = request.get_json()
+	username = user_details['username']
+	password = user_details['password']
+	res = user_object.login(username, password)
+	if res == "successful":
 		for user in user_object.user_list:
 			if user['username'] == username:
 				session['userid'] = user['id']
 				return jsonify(response ="login successful"), 200
-    return res
+	return res
 
 
 @api.route('/requests', methods = ['GET', 'POST'])
 def userrequests():
 	userid = session['userid']
 	if request.method == 'POST':
-        
+		
 		request_details = request.get_json()
 		category = request_details['category']
 		description = request_details['description']
