@@ -61,6 +61,13 @@ class Services(object):
 		user_requests = [request for request in self.request_list if request['userid'] == userid]
 		return user_requests
 
+	def find_by_id(self, reqid):
+		"""A method to find a request given an id"""
+		for request in self.request_list:
+			if request['id'] == reqid:
+				return request
+		return "Request Doesnt Exist"
+
 
 
 
