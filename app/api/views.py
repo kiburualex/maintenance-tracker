@@ -68,9 +68,26 @@ def userrequests():
 	requests = request_object.view_all(userid)
 	return jsonify(requests), 200
 
-@api.route('/requests/<reqid>', methods = ['GET', 'POST'])
+@api.route('/requests/<reqid>', methods = ['GET', 'PUT'])
 def get_request(reqid):
 	id = uuid.UUID(reqid)
+	if request.method == 'PUT':
+		request_details = request.get_json()
+		category = request_details['category']
+		description = request_details['description']
+		location = request_details['location']
+		date = request_details['date']
+		time = request_details['time']
+		res = request_object.update(id, category, description, location, date, time, userid= session['userid'])
+		if res == "update success":
+			requests = request_object.find_by_id(id)
+			ress = jsonify({"message": res, "request": requests})
+			return ress, 200
+		elif res == "no request with given id":
+			return jsonify(response = res), 404
+		else:
+			return jsonify(response = res), 409
+
 	requests = request_object.find_by_id(id)
 	return jsonify(requests), 200
 

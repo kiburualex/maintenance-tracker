@@ -68,6 +68,31 @@ class Services(object):
 				return request
 		return "Request Doesnt Exist"
 
+	def update(self, reqid, category, description, location, date, time, userid):
+		""" Find a request with the given id and update its details"""
+		for request in self. request_list:
+			if request['id'] == reqid:
+				self.request_list.remove(request)
+				if self.existing_request(category, userid, date):
+					return "Request cannot be updated, a similar Request exists"
+				else:
+					if not self.valid_description(description):
+						return "name too short or invalid"
+					else:
+						request['description'] = description
+						request['category'] = category
+						request['location'] = location
+						request['date'] = date
+						request['time'] = time
+						request['status'] = "New"
+						request['userid'] = userid
+						request['id'] = reqid
+						self.request_list.append(self.request_details)
+						return "update success"
+						break
+		else:
+			return "no request with given id"
+
 
 
 
