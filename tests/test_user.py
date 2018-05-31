@@ -38,4 +38,3 @@ class UserTests(unittest.TestCase):
         self.assertEqual(res, "passwords do not match")
 
 
-
