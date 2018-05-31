@@ -1,23 +1,13 @@
 """This module defines tests for the request class and its methods"""
-import pytest
+import unittest
 import os
 
 from flask import abort, url_for
-from flask_testing import TestCase
 
 from app import create_app
 from app.service import Services
 
-class TestBase(TestCase):
-
-    def create_app(self):
-
-        # pass in test configurations
-        config_name = 'testing'
-        app = create_app(config_name)
-        return app
-
-class RequestTests(TestCase):
+class RequestTests(unittest.TestCase):
     """Define and setup testing class"""
 
     def setUp(self):
@@ -28,48 +18,36 @@ class RequestTests(TestCase):
         """ Clear up objects after every test"""
         del self.request
 
-    @pytest.fixture(scope='module')
     def test_isuccessful_created(self):
         """Test if request can create sucessfully with correct fields"""
         res = self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1")
-        self.assertEqual(res, "Request send")
+        self.assertEqual(res, "Request Send")
 
     def test_create_existing_request(self):
     	""" Test if a request can be created twice"""
     	
-    	self.request.request_list = [{"type" :'maintenance', "description" :'request descriptions',\
+    	self.request.request_list = [{"category" :'maintenance', "description" :'request descriptions',\
          "location":"CBD", "date" : '2018-6-5',\
           "time" : "10:20 AM", "userid":'1'}]
     	res = self.request.create("maintenance", "request descriptions",\
-         "location", "pending", "2018-6-5", "10:20 AM", "1",)
-    	self.assertEqual(res, "Request already exists")
+         "location", "2018-6-5", "10:20 AM", "1",)
+    	self.assertEqual(res, "Request Already exists")
 
     def test_request_filter(self):
     	"""Test if filter by userid works"""
     	self.request.create("maintenance", "request descriptions",\
-         "location", "pending", "2018-6-5", "10:20 AM", "1",)
+         "location", "2018-6-5", "10:20 AM", "1",)
     	self.request.create("maintenance", "request descriptions",\
-         "location", "pending", "2018-6-5", "10:20 AM", "2",)
-    	res = self.request.request_filter("1")
+         "location", "2018-6-5", "10:20 AM", "2",)
+    	res = self.request.view_all("1")
     	request_description = res[0]['description']
     	self.assertIs(request_description, "request descriptions")
 
     def test_filter_by_id(self):
         """Test if the method finds the exactly specified id"""
-        self.request.create("maintenance", "request descriptions", "location", "pending", "2018-6-5", "10:20 AM", "1",)
+        self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1",)
         request_id = self.request.request_list[0]['id']
-        requesttype = self.request.request_list[0]['type']
+        requesttype = self.request.request_list[0]['category']
         foundrequest = self.request.find_by_id(request_id)
-        self.assertEqual(foundrequest['type'], requesttype)
-    
-
-class TestViews(TestBase):
-
-    def test_index(self):
-        """
-        Test that homepage is accessible without login
-        """
-        response = self.client.get(url_for('api.index'))
-        self.assertEqual(response.status_code, 200)
-
+        self.assertEqual(foundrequest['category'], requesttype)
     

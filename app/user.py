@@ -9,7 +9,6 @@ class User_details(object):
 	def __init__(self):
 		# A list to hold all user objects
 		self.user_list = []
-		self._list = []
 
 	def register(self, username, email, password, cnfpassword):
 		"""A method to register users with correct and valid details"""
