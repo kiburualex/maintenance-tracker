@@ -10,6 +10,19 @@ def create_app(config_name):
 
 
     from .api import api as api_blueprint
-    app.register_blueprint(api_blueprint, url_prefix='/api/v1')
+    app.register_blueprint(api_blueprint, url_prefix='/api/v1/users/')
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        return "You do not have sufficient permissions to access this resources.", 403
+
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return "The resource you are looking For Doesnt exist", 404
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return "The server encountered an internal error.", 500
+
 
     return app
