@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/dessHub/maintenance-tracker.svg?branch=api)](https://travis-ci.org/dessHub/maintenance-tracker)[![Coverage Status](https://coveralls.io/repos/github/dessHub/maintenance-tracker/badge.svg)](https://coveralls.io/github/dessHub/maintenance-tracker)
+[![Build Status](https://travis-ci.org/dessHub/maintenance-tracker.svg?branch=api)](https://travis-ci.org/dessHub/maintenance-tracker)[![Coverage Status](https://coveralls.io/repos/github/dessHub/maintenance-tracker/badge.svg?branch=ch-endpoints-test)](https://coveralls.io/github/dessHub/maintenance-tracker?branch=ch-endpoints-test)
 
 # maintenance-tracker
 
