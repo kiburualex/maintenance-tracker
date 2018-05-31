@@ -2,10 +2,11 @@
 import pytest
 import os
 
+from flask import abort, url_for
 from flask_testing import TestCase
 
 from app import create_app
-from app.request import Request_details
+from app.service import Services
 
 class TestBase(TestCase):
 
@@ -21,7 +22,7 @@ class RequestTests(TestCase):
 
     def setUp(self):
         """ Set up request object before each test"""
-        self.request = Request_details()
+        self.request = Services()
 
     def tearDown(self):
         """ Clear up objects after every test"""
@@ -30,15 +31,15 @@ class RequestTests(TestCase):
     @pytest.fixture(scope='module')
     def test_isuccessful_created(self):
         """Test if request can create sucessfully with correct fields"""
-        res = self.request.create("maintenance", "request descriptions", "location", "pending", "2018-6-5", "10:20 AM", "1",)
-        self.assertEqual(res, "Created successfull")
+        res = self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1")
+        self.assertEqual(res, "Request send")
 
     def test_create_existing_request(self):
     	""" Test if a request can be created twice"""
     	
     	self.request.request_list = [{"type" :'maintenance', "description" :'request descriptions',\
-         "location":"CBD",  "status":'pending', \
-         "date" : '2018-6-5', "time" : "10:20 AM", "userid":'1'}]
+         "location":"CBD", "date" : '2018-6-5',\
+          "time" : "10:20 AM", "userid":'1'}]
     	res = self.request.create("maintenance", "request descriptions",\
          "location", "pending", "2018-6-5", "10:20 AM", "1",)
     	self.assertEqual(res, "Request already exists")
@@ -60,4 +61,15 @@ class RequestTests(TestCase):
         requesttype = self.request.request_list[0]['type']
         foundrequest = self.request.find_by_id(request_id)
         self.assertEqual(foundrequest['type'], requesttype)
+    
+
+class TestViews(TestBase):
+
+    def test_index(self):
+        """
+        Test that homepage is accessible without login
+        """
+        response = self.client.get(url_for('api.index'))
+        self.assertEqual(response.status_code, 200)
+
     

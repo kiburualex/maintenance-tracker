@@ -1,7 +1,7 @@
 import uuid
 from app.user import User_details
 from app.service import Services
-from flask import request, json , jsonify, url_for, session, abort
+from flask import request, json , jsonify, url_for, session, abort, render_template
 
 from . import api
 
@@ -14,7 +14,7 @@ def index():
 	"""
 	Index route test
 	"""
-	return "hello"
+	return render_template('index.html'), 200
 
 @api.route('/register', methods=['POST'])
 def register():

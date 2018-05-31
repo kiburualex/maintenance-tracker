@@ -2,6 +2,7 @@
 import pytest
 import os
 
+from flask import abort, url_for
 from flask_testing import TestCase
 from app import create_app
 from app.user import User_details
@@ -50,3 +51,20 @@ class UserTests(TestCase):
         """Test if password matching is working"""
         res = self.user.register("desmond", "desmond@mail.com", "pass1234", "patyt1233")
         self.assertEqual(res, "passwords do not match")
+
+class TestViews(TestBase):
+
+    def test_login_view(self):
+        """
+        Test that login 
+        """
+        response = self.client.get(url_for('api.login'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_requests_view(self):
+        """
+        Test that users requests  
+        """
+        response = self.client.get(url_for('api.userrequests'))
+        self.assertEqual(response.status_code, 200)
+
