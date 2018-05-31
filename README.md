@@ -5,185 +5,40 @@
 
 Maintenance Tracker App is an application that provides users with the ability to reach out to operations or repairs department regarding repair or maintenance requests and monitor the status of their request.
 
-# Usage 
 
-# API
+**Application Features**
 
-FORMAT: 1A
-HOST: http://mtracker28.herokuapp.com/api/v1/users/
+* Creating Services Requests
+* Keeping Track of requests status 
 
-# usage
 
-Use #postman or #Curl
+A user can perform the following :
 
-url: http://mtracker28.herokuapp.com/api/v1/users/
+* create a request
+* view his/her requests
+* edit and update the request. 
+* delete the request created.
 
-## User Registration [/register]
+**Usage**
 
-### Register a new user [POST]
+* On the browser,visit the following url
+    
+     * [Mtracker](http://mtracker28.herokuapp.com/api/v1/users/)
+    
+* To interact with the API via Postman, use the link below
+    
+    * http://mtracker28.herokuapp.com/api/v1/users/
 
-You can create a user by sennding a json request with username, 
-, password, and password confirmation. password must be atleast 6 characters long.
-
-+ Request(application/json)
-
-            {
-                "username" : "sampleusername",
-                "email" : "example@gmail.com",
-                "password" : "password",
-                "cnfpass" : "password"
-            }
-
-+ Response 201 (application/json)
-            
-            {
-                "response" : "Registration successfull"
-            }
-            
-+ Response 409 (application/json)
-
-            {
-                "response" : "Username already exists"
-            }
-            
-+ Response 409 (application/json)
-
-            {
-                "response" : "Username can only contain alphanumeric characters"
-            }
-            
-+ Response 409 (application/json)
-
-            {
-                "response" : "passwords do not match"
-            }
-
-## Login [/login]
-
-### Login a user [POST]
-
-you can login a user by sending their username and password
-
-+ Request (application/json)
-
-            {
-                "username":"sampleusername",
-                "password" : "password"
-            }
-            
-+ Response 200 (application/json)
-
-            {
-                "response" : "login successful"
-            }
-            
-+ Response 403 (application/json)
-
-            {
-                "response" : "wrong username or password"
-            }
-
-## requests [/requests]
-
-### Create a request [POST]
-
-You can create a request by sending request category, description, location, date and time 
-
-+ Request (application/json)
-
-            {
-                "category":"category",
-                "description" : "request description",
-                "location":"location",
-                "date":"2018-6-20",
-                "time":"11:10 AM"
-            }
-            
-+ Response 201 (application/json)
-
-            {
-                "response" : "Request send"
-            }
-            
-+ Response 409 (application/json)
-
-            {
-                "response" : "Request exists"
-            }
-            
-+ Response 409 (application/json)
-
-            {
-                "response" : "description too short or invalid"
-            }
-        
-
-### Fetch all user requests [GET]
-
-+ Request (application/json)
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "category":"maintenance",
-                "description" : "request description",
-                "date":"2018-6-20",
-                "time":"11:10 AM",
-                "id" : "2be47f9a-d733-11e7-920a-bc8556ecad23",
-                "location":"location",
-                "userid": "2be47f4g-d733-11e7-920a-bc8556ecad23"
-            },
-            {
-                "category":"Repair",
-                "description" : "request description",
-                "date":"2018-7-20",
-                "time":"11:10 AM",
-                "id" : "2be47f9a-d733-11e7-920a-bc8556ecad45",
-                "location":"location",
-                "userid": "2be47f4g-d733-11e7-920a-bc8556ecad23"
-            }
-        ]
-        
-## update request [/requests/<reqid>]
-
-### update request [POST]
-
-you can update a request by sending the request id together with the new category, description, location, date and time
-
-+ Request (application/json)
-
-            {
-                "category":"category",
-                "description" : "request description",
-                "location":"location",
-                "date":"2018-6-20",
-                "time":"11:10 AM"
-            }
-            
-+ Response 200 (application/json)
-
-            {
-                "response" : "update success"
-            }
-            
-+ Response 409 (application/json)
-
-            {
-                "response" : "Request cannot be updated, a similar request exists"
-            }
-            
-+ Response 409 (application/json)
-
-            {
-                "response" : "description too short or invalid"
-            }
-            
-+ Response 404 (application/json)
-
-            {
-                "response" : "no request with given id"
-            }
+    then use the following endpoints to perform the specified tasks
+    
+    EndPoint                            | Functionality
+    ------------------------            | ----------------------
+    POST /register                      | Create a user account
+    POST /login                         | Log in a user
+    POST /requests                      | Create a request
+    GET /requests                       | Retrieve existing user's requests
+    PUT /requests/< reqid >             | Update a requests 
+    GET  /requests/< reqid >            | Retrieve a requests
 
 
 # UI
