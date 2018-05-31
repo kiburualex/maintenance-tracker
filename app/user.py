@@ -47,7 +47,7 @@ class User_details(object):
 				else:
 					return "wrong password"
 					break
-		return "user does not exist"
+		return "user does not exist", 200
 
 
 		
