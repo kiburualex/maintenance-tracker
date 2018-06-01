@@ -21,7 +21,7 @@ class RequestTests(unittest.TestCase):
     def test_isuccessful_created(self):
         """Test if request can create sucessfully with correct fields"""
         res = self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1")
-        self.assertEqual(res, "Request Send")
+        self.assertEqual(res, "Request Sent")
 
     def test_create_existing_request(self):
     	""" Test if a request can be created twice"""

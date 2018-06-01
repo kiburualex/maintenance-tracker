@@ -36,7 +36,7 @@ class Services(object):
 		return True
 
 	def create(self, category, description, location, date, time, userid):
-		"""A method for creating a new event"""
+		"""A method for creating a new request"""
 		self.request_details = {}
 		if self.existing_request(category, userid, date):
 			return "Request Already exists"	
@@ -54,7 +54,7 @@ class Services(object):
 				self.request_details['userid'] = userid
 				self.request_details['id'] = uuid.uuid1()
 				self.request_list.append(self.request_details)
-				return "Request Send"
+				return "Request Sent"
 
 	def view_all(self, userid):
 		""" A method to return a list of all requests"""
