@@ -37,4 +37,20 @@ class UserTests(unittest.TestCase):
         res = self.user.register("desmond", "desmond@mail.com", "pass1234", "patyt1233")
         self.assertEqual(res, "passwords do not match")
 
+    def test_invalid_password(self):
+        """Test if password is valid"""
+        res = self.user.login("dessmond", "")
+        self.assertEqual(res, "Password Not Valid")
+
+    def test_invalid_username_register(self):
+        """Test if username is valid"""
+        res = self.user.register("", "desmond@mail.com", "pass1234", "pass1234")
+        self.assertEqual(res, "Username Not Valid")
+
+    def test_invalid_username_login(self):
+        """Test if username is valid"""
+        res = self.user.login("", "pass1234")
+        self.assertEqual(res, "Username Not Valid")
+
+
 
