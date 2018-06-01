@@ -1,35 +1,36 @@
 
 class Config(object):
-    """
-    Common configurations
-    """
+	"""
+	Common configurations
+	"""
 
-    DEBUG = True
+	DEBUG = True
 
 class DevelopmentConfig(Config):
-    """
-    Development configurations
-    """
+	"""
+	Development configurations
+	"""
 
-    DEBUG = True
-    SECRET_KEY = "itsasecret"
+	DEBUG = True
+	SECRET_KEY = "itsasecret"
 
 class ProductionConfig(Config):
-    """
-    Production configurations
-    """
-
-    DEBUG = False
+	"""
+	Production configurations
+	"""
+	DEBUG = False
+	TESTING = False
+	SECRET_KEY = "itsasecret"
 
 class TestingConfig(Config):
-    """
-    Testing configurations
-    """
+	"""
+	Testing configurations
+	"""
 
-    TESTING = True
+	TESTING = True
 
 app_config = {
-    'development': DevelopmentConfig,
-    'production': ProductionConfig,
-    'testing': TestingConfig
+	'development': DevelopmentConfig,
+	'production': ProductionConfig,
+	'testing': TestingConfig
 }
