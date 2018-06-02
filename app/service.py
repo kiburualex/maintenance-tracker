@@ -28,6 +28,13 @@ class Services(object):
 		else:
 			return True
 
+	def valid_category(self, category):
+		"""check category provided if maintenance or repair"""
+		if category == "maintenance" or category == "repair" or category == "Maintenance" or category == "Repair":
+			return True
+		else:
+			return False
+
 	def valid_date(self, re_date):
 		"""Check if the given date is less than the current date"""
 		date = datetime.strptime(re_date, '%Y-%m-%d').date()
@@ -38,23 +45,25 @@ class Services(object):
 	def create(self, category, description, location, date, time, userid):
 		"""A method for creating a new request"""
 		self.request_details = {}
-		if self.existing_request(category, userid, date):
-			return "Request Already exists"	
-		else:
-			#validate event name
-			if not self.valid_description(description):
-				return "description too short or invalid"
+		if self.valid_category(category):
+			if self.existing_request(category, userid, date):
+				return "Request Already exists"	
 			else:
-				self.request_details['description'] = description
-				self.request_details['category'] = category
-				self.request_details['location'] = location
-				self.request_details['date'] = date
-				self.request_details['time'] = time
-				self.request_details['status'] = "New"
-				self.request_details['userid'] = userid
-				self.request_details['id'] = uuid.uuid1()
-				self.request_list.append(self.request_details)
-				return "Request Sent"
+				#validate event name
+				if not self.valid_description(description):
+					return "description too short or invalid"
+				else:
+					self.request_details['description'] = description
+					self.request_details['category'] = category
+					self.request_details['location'] = location
+					self.request_details['date'] = date
+					self.request_details['time'] = time
+					self.request_details['status'] = "New"
+					self.request_details['userid'] = userid
+					self.request_details['id'] = uuid.uuid1()
+					self.request_list.append(self.request_details)
+					return "Request Sent"
+		return "Invalid Category. Category should either be maintenance or repair"
 
 	def view_all(self, userid):
 		""" A method to return a list of all requests"""

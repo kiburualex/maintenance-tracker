@@ -51,3 +51,13 @@ class RequestTests(unittest.TestCase):
         foundrequest = self.request.find_by_id(request_id)
         self.assertEqual(foundrequest['category'], requesttype)
     
+    def test_valid_category(self):
+        """Test if the method can detect valid category"""
+        res = self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1",)
+        self.assertEqual(res, "Request Sent")
+
+    def test_invalid_category(self):
+        """Test if the method can detect invalid category"""
+        res = self.request.create("other", "request descriptions", "location", "2018-6-5", "10:20 AM", "1",)
+        self.assertEqual(res, "Invalid Category. Category should either be maintenance or repair")
+     
