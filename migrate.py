@@ -1,17 +1,14 @@
 import psycopg2 
 import os
 from passlib.hash import sha256_crypt
+from connect import conn
 
 
 def migrate():
-    dbname = os.getenv("DBNAME", "testdb")
-    dbuser = os.getenv("DBUSER", "postgres")
-    dbpass = os.getenv("PASSWORD", "root123")
-    dbhost = os.getenv("DBHOST", "localhost")
 
     
     try:
-        conn = psycopg2.connect(dbname=dbname, user=dbuser, host=dbhost, password=dbpass)
+        
         cur = conn.cursor()
         cur.execute("DROP TABLE IF EXISTS users")
         cur.execute("DROP TABLE IF EXISTS requests")
