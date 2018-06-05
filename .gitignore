@@ -1,0 +1,22 @@
+# virtualenv
+.venv
+venv/
+VENV/
+
+.pytest_cache
+.vscode
+
+#dot.py files
+*.pyc
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+

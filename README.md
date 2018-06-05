@@ -1,8 +1,47 @@
+
+[![Build Status](https://travis-ci.org/dessHub/maintenance-tracker.svg?branch=api)](https://travis-ci.org/dessHub/maintenance-tracker) [![Coverage Status](https://coveralls.io/repos/github/dessHub/maintenance-tracker/badge.svg?branch=ch-endpoints-test)](https://coveralls.io/github/dessHub/maintenance-tracker?branch=ch-endpoints-test) <a href="https://codeclimate.com/github/dessHub/maintenance-tracker/maintainability"><img src="https://api.codeclimate.com/v1/badges/82045ce49fe33c89b431/maintainability" /></a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/196440f843684fb5b333c49774ff0d0f)](https://www.codacy.com/app/dessHub/maintenance-tracker?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dessHub/maintenance-tracker&amp;utm_campaign=Badge_Grade)
+
 # maintenance-tracker
 
 Maintenance Tracker App is an application that provides users with the ability to reach out to operations or repairs department regarding repair or maintenance requests and monitor the status of their request.
 
-# Usage 
+
+**Application Features**
+
+* Creating Services Requests
+* Keeping Track of requests status 
+
+
+A user can perform the following :
+
+* create a request
+* view his/her requests
+* edit and update the request. 
+* delete the request created.
+
+**Usage**
+
+* On the browser,visit the following url
+    
+     * [Mtracker](http://mtracker28.herokuapp.com/api/v1/users/)
+    
+* To interact with the API via Postman, use the link below
+    
+    * http://mtracker28.herokuapp.com/api/v1/users/
+
+    then use the following endpoints to perform the specified tasks
+    
+    EndPoint                            | Functionality
+    ------------------------            | ----------------------
+    POST /register                      | Create a user account
+    POST /login                         | Log in a user
+    POST /requests                      | Create a request
+    GET /requests                       | Retrieve existing user's requests
+    PUT /requests/< reqid >             | Update a requests 
+    GET  /requests/< reqid >            | Retrieve a requests
+
+
+# UI
 
  Visit [Maintenance App](https://desshub.github.io/maintenance-tracker/ui/index.html)
  
