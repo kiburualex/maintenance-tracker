@@ -1,38 +1,41 @@
 import uuid
 from app.user import User_details
 from app.service import Services
+from app.jwtfile import Jwt_details
 from flask import request, json , jsonify, url_for, session, abort, render_template
 
 from . import api
 
 request_object = Services()
 user_object = User_details()
-
+jwt_obj = Jwt_details()
 
 @api.route('/')
 def index():
-	"""
+	""" 
 	Index route test
 	"""
 	return render_template('index.html'), 200
 
-@api.route('/register', methods=['POST'])
+@api.route('/auth/register', methods=['POST'])
 def register():
 	"""A route to handle user registration"""
 	
 	user_details = request.get_json()
 	username = user_details['username']
-	email = user_details['email']
+	name = user_details['name']
 	password = user_details['password']
 	cnfpassword = user_details['cnfpass']
 	#pass the details to the register method
-	res = user_object.register(username,email, password, cnfpassword)
+	res = user_object.register(username, name, password, cnfpassword)
 	if res == "Registration successfull":
-		return jsonify(response = res), 201
+		res = user_object.serialiser_user(username)
+
+		return jsonify({"user": res, "message" : "Registration Successfull. You can login now at /api/v2/auth/login"}), 201
 	else:
 		return jsonify(response = res),409
 
-@api.route('/login', methods=['POST'])
+@api.route('/auth/login', methods=['POST'])
 def login():
 	"""
 	A route to handle user login
@@ -42,10 +45,10 @@ def login():
 	password = user_details['password']
 	res = user_object.login(username, password)
 	if res == "successful":
-		for user in user_object.user_list:
-			if user['username'] == username:
-				session['userid'] = user['id']
-				return jsonify(response ="login successful"), 200
+		user = user_object.serialiser_user(username)
+		auth_token = jwt_obj.generate_auth_token(user["id"])
+		session['userid'] = user['id']
+		return jsonify({"user": user, "message" : "Login Successfull. ", "Access token" : auth_token}), 201
 	return res
 
 
