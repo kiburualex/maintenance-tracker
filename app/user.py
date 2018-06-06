@@ -49,14 +49,14 @@ class User_details(object):
 			if not self.valid_password(password):
 				return "Password Not Valid"
 			else:
-				for user in self.user_list:
-					if username == user['username']:
-						if password == user['password']:
-							return "successful"
-						else:
-							return "wrong password"
-							break
-					return "user does not exist", 200
+				if self.username_exist(username):
+					user = self.serialiser_user(username)
+					h_pass = sha256_crypt.verify(password, user['password'])
+					if h_pass:
+						return "successful"
+					else:
+						return "wrong password"
+				return "user does not exist", 200
 
 	def valid_username(self, username):
 		"""check username length and special characters"""

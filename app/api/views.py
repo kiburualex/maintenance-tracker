@@ -31,11 +31,11 @@ def register():
 	if res == "Registration successfull":
 		res = user_object.serialiser_user(username)
 
-		return jsonify(response = res["id"]), 201
+		return jsonify({"user": res, "message" : "Registration Successfull. You can login now at /api/v2/auth/login"}), 201
 	else:
 		return jsonify(response = res),409
 
-@api.route('/login', methods=['POST'])
+@api.route('/auth/login', methods=['POST'])
 def login():
 	"""
 	A route to handle user login
@@ -45,10 +45,8 @@ def login():
 	password = user_details['password']
 	res = user_object.login(username, password)
 	if res == "successful":
-		for user in user_object.user_list:
-			if user['username'] == username:
-				session['userid'] = user['id']
-				return jsonify(response ="login successful"), 200
+		res = user_object.serialiser_user(username)
+		return jsonify({"user": res, "message" : "Login Successfull. "}), 201
 	return res
 
 
