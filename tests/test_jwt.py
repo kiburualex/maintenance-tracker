@@ -24,9 +24,3 @@ class UserTests(unittest.TestCase):
         auth_token = self.jwtobj.generate_auth_token(1)
         self.assertTrue(isinstance(auth_token, bytes))
 
-    # def test_decode_auth_token(self):
-    #     """Test Decodes the access token from the Authorization header"""
-    #     with app.app_context():
-    #         auth_token = self.jwtobj.generate_auth_token(1)
-    #         self.assertTrue(isinstance(auth_token, bytes))
-    #         self.assertTrue(self.jwtobj.decode_auth_token(auth_token) == 1)

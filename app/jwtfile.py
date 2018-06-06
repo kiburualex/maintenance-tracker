@@ -3,12 +3,9 @@ from flask import current_app
 from datetime import datetime, timedelta
 
 class Jwt_details(object):
-	""" A class to handle activities related to a jwt"""
-	def __init__(self):
-		# A list to hold all user objects
-		self.user_obj = []
 
-	def generate_auth_token(self, userid):
+	@staticmethod
+	def generate_auth_token(userid):
 		"""a method to generate the access token"""
 		try:
 			# set up a payload
@@ -29,7 +26,8 @@ class Jwt_details(object):
 			# return an error in string format if an exception occurs
 			return str(error)
 	
-	def decode_auth_token(self, token):
+	@staticmethod
+	def decode_auth_token(token):
 		"""Decodes the access token from the Authorization header."""
 		try:
 			# try to decode the token using our SECRET variable
