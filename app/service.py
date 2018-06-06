@@ -77,6 +77,7 @@ class Services(object):
 		cur = conn.cursor()
 		cur.execute("SELECT * FROM requests WHERE user_id = %s;", (user_id,))
 		requests = cur.fetchall()
+		conn.commit()
 		for item in requests:
 			self.request_details['description'] = item[6]
 			self.request_details['category'] = item[2]
@@ -92,36 +93,45 @@ class Services(object):
 
 	def find_by_id(self, reqid):
 		"""A method to find a request given an id"""
-		for request in self.request_list:
-			if request['id'] == reqid:
-				return request
+		self.request_details = {}
+		self.request_list = []
+		cur = conn.cursor()
+		cur.execute("SELECT * FROM requests WHERE id=%s;", (reqid,))
+		item = cur.fetchone()
+		if item:
+			self.request_details['description'] = item[6]
+			self.request_details['category'] = item[2]
+			self.request_details['location'] = item[3]
+			self.request_details['date'] = item[4].isoformat()
+			self.request_details['time'] = item[5].isoformat() 
+			self.request_details['status'] = item[7]
+			self.request_details['user_id'] = item[1]
+			self.request_details['id'] = item[0]
+			self.request_details['isresolved'] = item[8]
+			self.request_list.append(self.request_details)
+			return self.request_list
 		return "Request Doesnt Exist"
 
-	def update(self, reqid, category, description, location, date, time, userid):
+	def update(self, reqid, category, description, location, date, time):
 		""" Find a request with the given id and update its details"""
-		for request in self. request_list:
-			if request['id'] == reqid:
-				self.request_list.remove(request)
-				if self.existing_request(category, userid, date):
-					return "Request cannot be updated, a similar Request exists"
-				else:
-					if not self.valid_description(description):
-						return "name too short or invalid"
-					else:
-						request['description'] = description
-						request['category'] = category
-						request['location'] = location
-						request['date'] = date
-						request['time'] = time
-						request['status'] = "New"
-						request['userid'] = userid
-						request['id'] = reqid
-						self.request_list.append(self.request_details)
-						return "update success"
-						break
+		cur = conn.cursor()
+		cur.execute("UPDATE requests SET category = %s, description = %s, location = %s,\
+		req_date = %s, req_time = %s WHERE id = %s;", (category, description, location, date, time, reqid))
+		conn.commit()
+
+		if self.request_exist_by_id(reqid):
+			return "update success"
 		else:
 			return "no request with given id"
 
 
-
+	def request_exist_by_id(self, reqid):
+		"""A method to check if a request exists"""
+		cur = conn.cursor()
+		cur.execute("SELECT * FROM requests WHERE id=%s;", (reqid,))
+		req = cur.fetchone()
+		if req:
+			return True
+		else:
+			return False
 
