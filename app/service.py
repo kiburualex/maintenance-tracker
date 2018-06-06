@@ -1,23 +1,25 @@
 #used to to validate event names
 import re
 from datetime import date, datetime
+from connect import conn
 import uuid
+from flask import session
 
 class Services(object):
 	""" A class to handle actions related to requests"""
 
 	def __init__(self):
 		"""define an empty list to hold all the requests objects"""
-		self.request_list = []
+		self.request_lists = []
 
-	def existing_request(self, category, userid, date):
+	def existing_request(self, category, user_id, date):
 		"""A method to check if a request has already been placed"""
-		for request in self.request_list:
-			#test to see if the user has already send simmilar requests 
-			if request['category'] == category and request['userid'] == userid:
-				if request['date'] == date:
-					return True
-					break
+		cur = conn.cursor()
+		cur.execute("SELECT * FROM requests WHERE category = %s AND user_id = %s AND \
+		 req_date = %s;", (category,user_id, date,))
+		cat = cur.fetchone()
+		if cat:
+			return True
 		else:
 			return False
 
@@ -53,22 +55,40 @@ class Services(object):
 				if not self.valid_description(description):
 					return "description too short or invalid"
 				else:
-					self.request_details['description'] = description
-					self.request_details['category'] = category
-					self.request_details['location'] = location
-					self.request_details['date'] = date
-					self.request_details['time'] = time
-					self.request_details['status'] = "New"
-					self.request_details['userid'] = userid
-					self.request_details['id'] = uuid.uuid1()
-					self.request_list.append(self.request_details)
+					status = "New"
+					user_id = userid
+					req_date = date
+					req_time = time
+					isresolved = False
+
+					cur = conn.cursor()
+					cur.execute("INSERT INTO requests(user_id, category, location, req_date,\
+					 req_time, description, status, isresolved)\
+					  VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",(user_id, category, location, req_date,\
+					  req_time, description, status, isresolved))
+					conn.commit()
 					return "Request Sent"
 		return "Invalid Category. Category should either be maintenance or repair"
 
-	def view_all(self, userid):
+	def view_all(self, user_id):
 		""" A method to return a list of all requests"""
-		user_requests = [request for request in self.request_list if request['userid'] == userid]
-		return user_requests
+		self.request_details = {}
+		self.request_list = []
+		cur = conn.cursor()
+		cur.execute("SELECT * FROM requests WHERE user_id = %s;", (user_id,))
+		requests = cur.fetchall()
+		for item in requests:
+			self.request_details['description'] = item[6]
+			self.request_details['category'] = item[2]
+			self.request_details['location'] = item[3]
+			self.request_details['date'] = item[4].isoformat()
+			self.request_details['time'] = item[5].isoformat() 
+			self.request_details['status'] = item[7]
+			self.request_details['user_id'] = item[1]
+			self.request_details['id'] = item[0]
+			self.request_details['isresolved'] = item[8]
+			self.request_list.append(self.request_details)
+		return self.request_list
 
 	def find_by_id(self, reqid):
 		"""A method to find a request given an id"""

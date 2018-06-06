@@ -10,6 +10,26 @@ request_object = Services()
 user_object = User_details()
 jwt_obj = Jwt_details()
 
+@api.before_app_request
+def before_request():
+    """get the user bafore every request"""
+    if request.endpoint and 'auth' not in request.url:
+        auth_header = request.headers.get('Authorization')
+        
+        if auth_header:
+            access_token = auth_header.split(" ")[1]
+            if access_token:
+                #try decoding the token and get the user_id
+                res = jwt_obj.decode_auth_token(access_token)
+                if isinstance(res, int) :
+                    #check if no error in string format was returned
+                    #find the user with the id on the token
+                    
+                    return
+                return jsonify({"message" : "Please register or login to continue"}), 401
+            return jsonify({"message" : "acess token is missing"}), 401
+        return jsonify({"message" : "Authorization header is missing"}), 401
+
 @api.route('/')
 def index():
 	""" 
@@ -52,7 +72,7 @@ def login():
 	return res
 
 
-@api.route('/requests', methods = ['GET', 'POST'])
+@api.route('/users/requests', methods = ['GET', 'POST'])
 def userrequests():
 	userid = session['userid']
 	if request.method == 'POST':
