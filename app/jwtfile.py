@@ -28,3 +28,16 @@ class Jwt_details(object):
 		except Exception as error:
 			# return an error in string format if an exception occurs
 			return str(error)
+	
+	def decode_auth_token(self, token):
+		"""Decodes the access token from the Authorization header."""
+		try:
+			# try to decode the token using our SECRET variable
+			payload = jwt.decode(token, current_app.config.get('SECRET_KEY'))
+			return payload['sub']
+		except jwt.ExpiredSignatureError:
+			# the token is expired, return an error message
+			return "You were logged out. Please login"
+		except jwt.InvalidTokenError:
+			# the token is invalid, return an error message
+			return "Please register or login"
