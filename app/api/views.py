@@ -1,5 +1,4 @@
 import uuid
-from connect import conn
 from app.user import User_details
 from app.service import Services
 from app.jwtfile import Jwt_details
