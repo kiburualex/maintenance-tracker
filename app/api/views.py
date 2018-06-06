@@ -1,4 +1,5 @@
 import uuid
+from connect import conn
 from app.user import User_details
 from app.service import Services
 from flask import request, json , jsonify, url_for, session, abort, render_template
@@ -11,24 +12,26 @@ user_object = User_details()
 
 @api.route('/')
 def index():
-	"""
+	""" 
 	Index route test
 	"""
 	return render_template('index.html'), 200
 
-@api.route('/register', methods=['POST'])
+@api.route('/auth/register', methods=['POST'])
 def register():
 	"""A route to handle user registration"""
 	
 	user_details = request.get_json()
 	username = user_details['username']
-	email = user_details['email']
+	name = user_details['name']
 	password = user_details['password']
 	cnfpassword = user_details['cnfpass']
 	#pass the details to the register method
-	res = user_object.register(username,email, password, cnfpassword)
+	res = user_object.register(username, name, password, cnfpassword)
 	if res == "Registration successfull":
-		return jsonify(response = res), 201
+		res = user_object.serialiser_user(username)
+
+		return jsonify(response = res["id"]), 201
 	else:
 		return jsonify(response = res),409
 
