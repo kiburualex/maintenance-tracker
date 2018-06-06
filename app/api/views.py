@@ -72,7 +72,7 @@ def login():
 	return res
 
 
-@api.route('/requests', methods = ['GET', 'POST'])
+@api.route('/users/requests', methods = ['GET', 'POST'])
 def userrequests():
 	userid = session['userid']
 	if request.method == 'POST':
