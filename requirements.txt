@@ -31,6 +31,7 @@ passlib==1.7.1
 psycopg2==2.7.4
 pycodestyle==2.4.0
 pycparser==2.18
+PyJWT==1.6.4
 pylint==1.9.1
 pyOpenSSL==18.0.0
 requests==2.18.4
