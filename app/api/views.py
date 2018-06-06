@@ -2,13 +2,14 @@ import uuid
 from connect import conn
 from app.user import User_details
 from app.service import Services
+from app.jwtfile import Jwt_details
 from flask import request, json , jsonify, url_for, session, abort, render_template
 
 from . import api
 
 request_object = Services()
 user_object = User_details()
-
+jwt_obj = Jwt_details()
 
 @api.route('/')
 def index():
@@ -45,8 +46,10 @@ def login():
 	password = user_details['password']
 	res = user_object.login(username, password)
 	if res == "successful":
-		res = user_object.serialiser_user(username)
-		return jsonify({"user": res, "message" : "Login Successfull. "}), 201
+		user = user_object.serialiser_user(username)
+		auth_token = jwt_obj.generate_auth_token(user["id"])
+		session['userid'] = user['id']
+		return jsonify({"user": user, "message" : "Login Successfull. ", "Access token" : auth_token}), 201
 	return res
 
 

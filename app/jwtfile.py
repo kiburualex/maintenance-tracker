@@ -1,4 +1,5 @@
 import jwt
+import os
 from flask import current_app
 from datetime import datetime, timedelta
 
@@ -17,7 +18,7 @@ class Jwt_details(object):
 			# create the byte string token using the payload and the SECRET key
 			jwt_string = jwt.encode(
 					payload,
-					current_app.config.get('SECRET_KEY'),
+					os.environ.get('SECRET_KEY', "itsasecret"),
 					algorithm='HS256'
 			)
 			return jwt_string
