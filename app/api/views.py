@@ -145,5 +145,27 @@ def admin_approve(reqid):
 	else:
 		return jsonify(response = "Sorry you don't have enough rights to view this resource")
 
+@api.route('/requests/<reqid>/disapprove')
+def admin_disapprove(reqid):
+	""" Admin endpoint to disapprove requests"""
+	if g.role == "Admin":
+		isexist = request_object.request_exist_by_id(reqid)
+		if isexist:
+			res = request_object.is_resolved(reqid)
+			if res == False:
+				resp = request_object.disapprove(reqid)
+				if resp == True:
+					requests = request_object.find_by_id(reqid)
+					return jsonify(requests), 200
+				else:
+					return jsonify(response="Error Disapproving the requests")
+			else:
+				return jsonify(response="Request is already resolved")
+		else:
+			return jsonify(response="Request doesnt exists")
+	else:
+		return jsonify(response = "Sorry you don't have enough rights to view this resource")
+
+
 
 
