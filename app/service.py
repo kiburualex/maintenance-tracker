@@ -55,7 +55,7 @@ class Services(object):
 				if not self.valid_description(description):
 					return "description too short or invalid"
 				else:
-					status = "New"
+					status = "Pending"
 					user_id = userid
 					req_date = date
 					req_time = time
@@ -131,12 +131,12 @@ class Services(object):
 
 	def update(self, reqid, category, description, location, date, time):
 		""" Find a request with the given id and update its details"""
-		cur = conn.cursor()
-		cur.execute("UPDATE requests SET category = %s, description = %s, location = %s,\
-		req_date = %s, req_time = %s WHERE id = %s;", (category, description, location, date, time, reqid))
-		conn.commit()
 
 		if self.request_exist_by_id(reqid):
+			cur = conn.cursor()
+			cur.execute("UPDATE requests SET category = %s, description = %s, location = %s,\
+			req_date = %s, req_time = %s WHERE id = %s;", (category, description, location, date, time, reqid))
+			conn.commit()
 			return "update success"
 		else:
 			return "no request with given id"
@@ -152,3 +152,47 @@ class Services(object):
 		else:
 			return False
 
+	def is_resolved(self, reqid):
+		"""A method to check if a request has been resolved"""
+		cur = conn.cursor()
+		cur.execute("SELECT * FROM requests WHERE id=%s;", (reqid,))
+		req = cur.fetchone()
+		if req[8] == True:
+			return True
+		else:
+			return False
+
+	def resolve(self, reqid):
+		""" A method to resolve requests """
+		try:
+			status = "Resolved"
+			isresolved = True
+			cur = conn.cursor()
+			cur.execute("UPDATE requests SET status = %s, isresolved = %s WHERE id = %s;",(status, isresolved, reqid))
+			conn.commit()
+			return True
+		except:
+			return False
+
+	def approve(self, reqid):
+		""" A method to rApprove requests """
+		try:
+			status = "Approved"
+			cur = conn.cursor()
+			cur.execute("UPDATE requests SET status = %s WHERE id = %s;",(status, reqid))
+			conn.commit()
+			return True
+		except:
+			return False
+
+	def disapprove(self, reqid):
+		""" A method to disapprove requests """
+		try:
+			status = "Disapproved"
+			isresolved = True
+			cur = conn.cursor()
+			cur.execute("UPDATE requests SET status = %s, isresolved = %s WHERE id = %s;",(status, isresolved, reqid))
+			conn.commit()
+			return True
+		except:
+			return False

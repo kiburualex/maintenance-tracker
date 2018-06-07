@@ -2,7 +2,7 @@ import uuid
 from app.user import User_details
 from app.service import Services
 from app.jwtfile import Jwt_details
-from flask import request, json , jsonify, url_for, session, abort, render_template
+from flask import request, json , jsonify, url_for, session, abort, render_template, g
 
 from . import api
 
@@ -15,7 +15,7 @@ def before_request():
 	"""get the user bafore every request"""
 	if request.endpoint and 'auth' not in request.url:
 		auth_header = request.headers.get('Authorization')
-		
+		g.user = None
 		if auth_header:
 			access_token = auth_header.split(" ")[1]
 			if access_token:
@@ -24,7 +24,9 @@ def before_request():
 				if isinstance(res, int) :
 					#check if no error in string format was returned
 					#find the user with the id on the token
-					
+					user = user_object.user_by_id(id=res)
+					g.userid = user['id']
+					g.role = user['role']
 					return
 				return jsonify({"message" : "Please register or login to continue"}), 401
 			return jsonify({"message" : "acess token is missing"}), 401
@@ -67,16 +69,14 @@ def login():
 	if res == "successful":
 		user = user_object.serialiser_user(username)
 		auth_token = jwt_obj.generate_auth_token(user["id"])
-		session['userid'] = user['id']
-		session['role'] = user['role']
 		return jsonify({"user": user, "message" : "Login Successfull. ", "Access token" : auth_token}), 201
 	return res
 
 
 @api.route('/users/requests', methods = ['GET', 'POST'])
 def userrequests():
-	userid = session['userid']
-	role = session['role']
+	userid = g.userid
+	role = g.role
 	if request.method == 'POST':
 		
 		request_details = request.get_json()
@@ -118,10 +118,32 @@ def get_request(reqid):
 @api.route('/requests')
 def admin_requests():
 	""" Admin endpoint to view all users requests"""
-	if session['role'] == "Admin":
-		res = request_object.view_all(session['userid'],session['role'])
+	if g.role == "Admin":
+		res = request_object.view_all(g.userid,g.role)
 		return jsonify(res), 200
 	else:
 		return jsonify(response = "Sorry you don't have enough rights to view this resource")
+
+@api.route('/requests/<reqid>/approve')
+def admin_approve(reqid):
+	""" Admin endpoint to approve requests"""
+	if g.role == "Admin":
+		isexist = request_object.request_exist_by_id(reqid)
+		if isexist:
+			res = request_object.is_resolved(reqid)
+			if res == False:
+				resp = request_object.approve(reqid)
+				if resp == True:
+					requests = request_object.find_by_id(reqid)
+					return jsonify(requests), 200
+				else:
+					return jsonify(response="Error Approving the requests")
+			else:
+				return jsonify(response="Request is already resolved")
+		else:
+			return jsonify(response="Request doesnt exists")
+	else:
+		return jsonify(response = "Sorry you don't have enough rights to view this resource")
+
 
 

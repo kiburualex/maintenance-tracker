@@ -95,3 +95,17 @@ class User_details(object):
 		user_details['role'] = items[3]
 		user_details['password'] = items[4]
 		return user_details 
+
+	def user_by_id(self, id):
+		""" Serialize tuple into dictionary """
+		user_details = {}
+		cur = conn.cursor()
+		cur.execute("SELECT * FROM users WHERE id = %s;", (id,))
+		items = cur.fetchone()
+		conn.commit()
+		user_details['id'] = items[0]
+		user_details['name'] = items[1]
+		user_details['username'] = items[2]
+		user_details['role'] = items[3]
+		user_details['password'] = items[4]
+		return user_details 
