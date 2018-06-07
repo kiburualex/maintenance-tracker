@@ -179,7 +179,7 @@ class Services(object):
             = %s WHERE id = %s;", (status, isresolved, reqid))
             conn.commit()
             return True
-        except:
+        except Exception:
             return False
 
     def approve(self, reqid):
@@ -192,7 +192,7 @@ class Services(object):
                  = %s;", (status, reqid))
             conn.commit()
             return True
-        except:
+        except Exception:
             return False
 
     def disapprove(self, reqid):
@@ -206,5 +206,5 @@ class Services(object):
                         (status, isresolved, reqid))
             conn.commit()
             return True
-        except:
+        except Exception:
             return False
