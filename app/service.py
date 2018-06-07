@@ -50,7 +50,7 @@ class Services(object):
 
     def create(self, category, description, location, date, time, userid):
         """A method for creating a new request"""
-        
+
         status = "Pending"
         user_id = userid
         req_date = date
@@ -60,9 +60,9 @@ class Services(object):
         cur = conn.cursor()
         cur.execute("INSERT INTO requests(user_id, category,\
         location, req_date, req_time, description, status,\
-        isresolved) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id;",\
-                    (user_id, category, location, req_date,\
-                    req_time, description, status, isresolved))
+        isresolved) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id;",
+                    (user_id, category, location, req_date,
+                     req_time, description, status, isresolved))
         id = cur.fetchone()[0]
         conn.commit()
         cur.execute("SELECT * FROM requests WHERE id=%s;", (id,))

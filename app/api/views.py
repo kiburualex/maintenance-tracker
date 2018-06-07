@@ -2,7 +2,8 @@ import uuid
 from app.user import User_details
 from app.service import Services
 from app.jwtfile import Jwt_details
-from flask import request, json, jsonify, url_for, session, abort, render_template, g
+from flask import request, json, jsonify, url_for, \
+    session, abort, render_template, g
 
 from . import api
 
@@ -27,9 +28,11 @@ def before_request():
                 g.userid = user['id']
                 g.role = user['role']
                 return
-            return jsonify({"message": "Please register or login to continue"}), 401
+            return jsonify({"message": "Please register or \
+            login to continue"}), 401
         except Exception as e:
-            return jsonify(response="Authorization header or acess token is missing."), 400
+            return jsonify(response="Authorization header or \
+            acess token is missing."), 400
 
 
 @api.route('/')
@@ -49,18 +52,18 @@ def register():
         name = user_details['name']
         password = user_details['password']
         cnfpassword = user_details['cnfpass']
-    except (ValueError, KeyError, TypeError) as error:
-        return jsonify(response="Make sure you are passing all the values and valid json data"), 400
+    except (ValueError, KeyError, TypeError):
+        return jsonify(response="Make sure you are passing all\
+         the values and valid json data"), 400
     # pass the details to the register method
     res = user_object.register(username, name, password, cnfpassword)
     if res == "Registration successfull":
         res = user_object.serialiser_user(username)
 
-        return jsonify({"user": res, "message": "Registration Successfull. You can login now at /api/v2/auth/login"}), 201
+        return jsonify({"user": res, "message": "Registration \
+        Successfull. You can login now at /api/v2/auth/login"}), 201
     else:
         return jsonify(response=res), 409
-
-
 
 
 @api.route('/auth/login', methods=['POST'])
@@ -72,14 +75,16 @@ def login():
         user_details = request.get_json()
         username = user_details['username']
         password = user_details['password']
-    except (ValueError, KeyError, TypeError) as error:
-        return jsonify(response="Make sure you are passing all the values and valid json data"), 400
+    except (ValueError, KeyError, TypeError):
+        return jsonify(response="Make sure you are passing all \
+        the values and valid json data"), 400
 
     res = user_object.login(username, password)
     if res == "successful":
         user = user_object.serialiser_user(username)
         auth_token = jwt_obj.generate_auth_token(user["id"])
-        return jsonify({"user": user, "message": "Login Successfull. ", "Access token": auth_token}), 201
+        return jsonify({"user": user, "message": "Login Successfull.\
+         ", "Access token": auth_token}), 201
     elif res == "wrong password":
         return jsonify(response=res), 400
     else:
@@ -99,17 +104,20 @@ def userrequests():
             date = request_details['date']
             time = request_details['time']
         except (ValueError, KeyError, TypeError) as error:
-            return jsonify(response="Make sure you are passing all the values and valid json data"), 400
-        
+            return jsonify(response="Make sure you are passing all \
+            the values and valid json data"), 400
+
         valid_category = request_object.valid_category(category)
         if valid_category is True:
             res = request_object.existing_request(
                 category, userid, date)
             if res is False:
                 try:
-                    res = request_object.create(category, description, location, date, time, userid)
-                    
-                    return jsonify({"message":"Successfully Created", "Request":res}), 201
+                    res = request_object.create(
+                        category, description, location, date, time, userid)
+
+                    return jsonify({"message": "Successfully Created",
+                                    "Request": res}), 201
                 except Exception:
                     return jsonify(response="Error Creating Request"), 501
             return jsonify(response="Request Already exists"), 409
@@ -129,8 +137,9 @@ def get_request(reqid):
             location = request_details['location']
             date = request_details['date']
             time = request_details['time']
-        except (ValueError, KeyError, TypeError) as error:
-            return jsonify(response="Make sure you are passing all the values and valid json data"), 400
+        except (ValueError, KeyError, TypeError):
+            return jsonify(response="Make sure you are passing all \
+            the values and valid json data"), 400
 
         res = request_object.update(
             reqid, category, description, location, date, time)
@@ -154,7 +163,8 @@ def admin_requests():
         res = request_object.view_all(g.userid, g.role)
         return jsonify(res), 200
     else:
-        return jsonify(response="Sorry you don't have enough rights to view this resource")
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource")
 
 
 @api.route('/requests/<reqid>/approve')
@@ -164,19 +174,21 @@ def admin_approve(reqid):
         isexist = request_object.request_exist_by_id(reqid)
         if isexist:
             res = request_object.is_resolved(reqid)
-            if res == False:
+            if res is False:
                 resp = request_object.approve(reqid)
-                if resp == True:
+                if resp is True:
                     requests = request_object.find_by_id(reqid)
                     return jsonify(requests), 200
                 else:
-                    return jsonify(response="Error Approving the requests"), 304
+                    return jsonify(response="Error Approving \
+                    the requests"), 304
             else:
                 return jsonify(response="Request is already resolved"), 409
         else:
             return jsonify(response="Request doesnt exists"), 404
     else:
-        return jsonify(response="Sorry you don't have enough rights to view this resource"), 401
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
 
 
 @api.route('/requests/<reqid>/disapprove')
@@ -186,19 +198,21 @@ def admin_disapprove(reqid):
         isexist = request_object.request_exist_by_id(reqid)
         if isexist:
             res = request_object.is_resolved(reqid)
-            if res == False:
+            if res is False:
                 resp = request_object.disapprove(reqid)
-                if resp == True:
+                if resp is True:
                     requests = request_object.find_by_id(reqid)
                     return jsonify(requests), 200
                 else:
-                    return jsonify(response="Error Disapproving the requests"), 304
+                    return jsonify(response="Error Disapproving \
+                    the requests"), 304
             else:
                 return jsonify(response="Request is already resolved"), 409
         else:
             return jsonify(response="Request doesnt exists"), 404
     else:
-        return jsonify(response="Sorry you don't have enough rights to view this resource"), 401
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
 
 
 @api.route('/requests/<reqid>/resolve')
@@ -208,16 +222,18 @@ def admin_resolve(reqid):
         isexist = request_object.request_exist_by_id(reqid)
         if isexist:
             res = request_object.is_resolved(reqid)
-            if res == False:
+            if res is False:
                 resp = request_object.resolve(reqid)
-                if resp == True:
+                if resp is True:
                     requests = request_object.find_by_id(reqid)
                     return jsonify(requests), 200
                 else:
-                    return jsonify(response="Error Resolving the requests"), 304
+                    return jsonify(response="Error Resolving\
+                     the requests"), 304
             else:
                 return jsonify(response="Request is already resolved"), 409
         else:
             return jsonify(response="Request doesnt exists"), 404
     else:
-        return jsonify(response="Sorry you don't have enough rights to view this resource"), 401
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
