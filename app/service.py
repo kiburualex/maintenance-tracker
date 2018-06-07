@@ -70,26 +70,43 @@ class Services(object):
 					return "Request Sent"
 		return "Invalid Category. Category should either be maintenance or repair"
 
-	def view_all(self, user_id):
+	def view_all(self, user_id, role):
 		""" A method to return a list of all requests"""
-		self.request_details = {}
-		self.request_list = []
+		request_details = {}
+		request_list = []
 		cur = conn.cursor()
-		cur.execute("SELECT * FROM requests WHERE user_id = %s;", (user_id,))
-		requests = cur.fetchall()
-		conn.commit()
-		for item in requests:
-			self.request_details['description'] = item[6]
-			self.request_details['category'] = item[2]
-			self.request_details['location'] = item[3]
-			self.request_details['date'] = item[4].isoformat()
-			self.request_details['time'] = item[5].isoformat() 
-			self.request_details['status'] = item[7]
-			self.request_details['user_id'] = item[1]
-			self.request_details['id'] = item[0]
-			self.request_details['isresolved'] = item[8]
-			self.request_list.append(self.request_details)
-		return self.request_list
+		if role == "Admin":
+			cur.execute("SELECT * FROM requests ;")
+			requests = cur.fetchall()
+			for item in requests:
+				request = dict(
+					id=item[0],
+					user_id=item[1],
+					category=item[2],
+					location=item[3],
+					date=item[4],
+					description=item[6],
+					status=item[7],
+					isresolved=item[8]
+				)
+				request_list.append(request)
+			return request_list
+		else:
+			cur.execute("SELECT * FROM requests WHERE user_id = %s;", (user_id,))
+			requests = cur.fetchall()
+			for item in requests:
+				request = dict(
+					id=item[0],
+					user_id=item[1],
+					category=item[2],
+					location=item[3],
+					date=item[4],
+					description=item[6],
+					status=item[7],
+					isresolved=item[8]
+				)
+				request_list.append(request)
+			return request_list
 
 	def find_by_id(self, reqid):
 		"""A method to find a request given an id"""
