@@ -80,7 +80,10 @@ def login():
         user = user_object.serialiser_user(username)
         auth_token = jwt_obj.generate_auth_token(user["id"])
         return jsonify({"user": user, "message": "Login Successfull. ", "Access token": auth_token}), 201
-    return jsonify(response=res), 400
+    elif res == "wrong password":
+        return jsonify(response=res), 400
+    else:
+        return jsonify(response=res), 404
 
 
 @api.route('/users/requests', methods=['GET', 'POST'])
@@ -97,13 +100,21 @@ def userrequests():
             time = request_details['time']
         except (ValueError, KeyError, TypeError) as error:
             return jsonify(response="Make sure you are passing all the values and valid json data"), 400
-
-        res = request_object.create(
-            category, description, location, date, time, userid=session['userid'])
-        if res == "Request created":
-            return jsonify(response=res), 201
-        else:
-            return jsonify(response=res), 409
+        
+        valid_category = request_object.valid_category(category)
+        if valid_category is True:
+            res = request_object.existing_request(
+                category, userid, date)
+            if res is False:
+                try:
+                    res = request_object.create(category, description, location, date, time, userid)
+                    
+                    return jsonify({"message":"Successfully Created", "Request":res}), 201
+                except Exception:
+                    return jsonify(response="Error Creating Request"), 501
+            return jsonify(response="Request Already exists"), 409
+        return jsonify(response="Invalid Category. Category should either \
+        be maintenance or repair"), 400
     requests = request_object.view_all(userid, role)
     return jsonify(requests), 200
 

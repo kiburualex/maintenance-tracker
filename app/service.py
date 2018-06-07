@@ -50,31 +50,36 @@ class Services(object):
 
     def create(self, category, description, location, date, time, userid):
         """A method for creating a new request"""
-        self.request_details = {}
-        if self.valid_category(category):
-            if self.existing_request(category, userid, date):
-                return "Request Already exists"
-            else:
-                # validate event name
-                if not self.valid_description(description):
-                    return "description too short or invalid"
-                else:
-                    status = "Pending"
-                    user_id = userid
-                    req_date = date
-                    req_time = time
-                    isresolved = False
+        
+        status = "Pending"
+        user_id = userid
+        req_date = date
+        req_time = time
+        isresolved = False
 
-                    cur = conn.cursor()
-                    cur.execute("INSERT INTO requests(user_id, category,\
-                     location, req_date, req_time, description, status,\
-                      isresolved) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                                (user_id, category, location, req_date,
-                                 req_time, description, status, isresolved))
-                    conn.commit()
-                    return "Request Sent"
-        return "Invalid Category. Category should either \
-        be maintenance or repair"
+        cur = conn.cursor()
+        cur.execute("INSERT INTO requests(user_id, category,\
+        location, req_date, req_time, description, status,\
+        isresolved) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id;",\
+                    (user_id, category, location, req_date,\
+                    req_time, description, status, isresolved))
+        id = cur.fetchone()[0]
+        conn.commit()
+        cur.execute("SELECT * FROM requests WHERE id=%s;", (id,))
+        item = cur.fetchone()
+        print item
+        request = dict(
+            id=item[0],
+            user_id=item[1],
+            category=item[2],
+            location=item[3],
+            date=item[4],
+            description=item[6],
+            status=item[7],
+            isresolved=item[8]
+        )
+
+        return request
 
     def view_all(self, user_id, role):
         """ A method to return a list of all requests"""

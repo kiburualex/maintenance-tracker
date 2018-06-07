@@ -63,7 +63,7 @@ class User_details(object):
                         return "successful"
                     else:
                         return "wrong password"
-                return "user does not exist", 200
+                return "user does not exist"
 
     def valid_username(self, username):
         """check username length and special characters"""
