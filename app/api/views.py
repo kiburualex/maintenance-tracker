@@ -12,23 +12,23 @@ jwt_obj = Jwt_details()
 
 @api.before_app_request
 def before_request():
-    """get the user bafore every request"""
-    if request.endpoint and 'auth' not in request.url:
-        auth_header = request.headers.get('Authorization')
-        
-        if auth_header:
-            access_token = auth_header.split(" ")[1]
-            if access_token:
-                #try decoding the token and get the user_id
-                res = jwt_obj.decode_auth_token(access_token)
-                if isinstance(res, int) :
-                    #check if no error in string format was returned
-                    #find the user with the id on the token
-                    
-                    return
-                return jsonify({"message" : "Please register or login to continue"}), 401
-            return jsonify({"message" : "acess token is missing"}), 401
-        return jsonify({"message" : "Authorization header is missing"}), 401
+	"""get the user bafore every request"""
+	if request.endpoint and 'auth' not in request.url:
+		auth_header = request.headers.get('Authorization')
+		
+		if auth_header:
+			access_token = auth_header.split(" ")[1]
+			if access_token:
+				#try decoding the token and get the user_id
+				res = jwt_obj.decode_auth_token(access_token)
+				if isinstance(res, int) :
+					#check if no error in string format was returned
+					#find the user with the id on the token
+					
+					return
+				return jsonify({"message" : "Please register or login to continue"}), 401
+			return jsonify({"message" : "acess token is missing"}), 401
+		return jsonify({"message" : "Authorization header is missing"}), 401
 
 @api.route('/')
 def index():
@@ -68,6 +68,7 @@ def login():
 		user = user_object.serialiser_user(username)
 		auth_token = jwt_obj.generate_auth_token(user["id"])
 		session['userid'] = user['id']
+		session['role'] = user['role']
 		return jsonify({"user": user, "message" : "Login Successfull. ", "Access token" : auth_token}), 201
 	return res
 
@@ -75,6 +76,7 @@ def login():
 @api.route('/users/requests', methods = ['GET', 'POST'])
 def userrequests():
 	userid = session['userid']
+	role = session['role']
 	if request.method == 'POST':
 		
 		request_details = request.get_json()
@@ -88,7 +90,7 @@ def userrequests():
 			return jsonify(response=res), 201
 		else:
 			return jsonify(response = res), 409
-	requests = request_object.view_all(userid)
+	requests = request_object.view_all(userid, role)
 	return jsonify(requests), 200
 
 @api.route('/users/requests/<reqid>', methods = ['GET', 'PUT'])
@@ -112,4 +114,14 @@ def get_request(reqid):
 
 	requests = request_object.find_by_id(reqid)
 	return jsonify(requests), 200
+
+@api.route('/requests')
+def admin_requests():
+	""" Admin endpoint to view all users requests"""
+	if session['role'] == "Admin":
+		res = request_object.view_all(session['userid'],session['role'])
+		return jsonify(res), 200
+	else:
+		return jsonify(response = "Sorry you don't have enough rights to view this resource")
+
 

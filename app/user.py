@@ -95,5 +95,3 @@ class User_details(object):
 		user_details['role'] = items[3]
 		user_details['password'] = items[4]
 		return user_details 
-
-		
