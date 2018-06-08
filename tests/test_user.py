@@ -6,7 +6,6 @@ from flask import abort, url_for
 from app.user import User_details
 from flask_testing import TestCase
 from app import create_app
-from migrate import migrate
 from passlib.hash import sha256_crypt
 from connect import conn
 
@@ -43,14 +42,14 @@ class UserTests(TestBase):
 
     def test_isuccessful_registration(self):
         """Test is a user with correct credentials can register sucessfully"""
-        res = self.user.register("desmond@mail.com", "desmond", "pass1234", "pass1234")
+        res = self.user.register("desmond", "desmond@mail.com", "pass1234", "pass1234")
         self.assertEqual(res, "Registration successfull")
     
     def test_existing_user(self):
         """Test with an already existing user, try registering a user twice"""
-        self.user.register("desmond@mail.com", "desmond", "pass1234", "pass1234")
-        res = self.user.register("desmond@mail.com", "desmond", "pass1234", "pass1234")
-        self.assertEqual(res, "Username already exists.")
+        self.user.register("desmond", "desmond@mail.com", "pass1234", "pass1234")
+        res = self.user.username_exist("desmond")
+        self.assertEqual(res, True)
 
     def test_password_length(self):
         """Test to ensure that a user has a strong password"""
@@ -59,7 +58,7 @@ class UserTests(TestBase):
 
     def test_password_match(self):
         """Test if password matching is working"""
-        res = self.user.register("desmond@mail.com", "desmond", "pass1234", "patyt1233")
+        res = self.user.register("desmond", "desmond@mail.com", "pass1234", "patyt1233")
         self.assertEqual(res, "passwords do not match")
 
     def test_invalid_password(self):
