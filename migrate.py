@@ -4,33 +4,58 @@ from passlib.hash import sha256_crypt
 from connect import conn
 
 
-def migrate():
-
-    
+def create_users():
+    """ Function To create users table"""    
     try:
         
         cur = conn.cursor()
         cur.execute("DROP TABLE IF EXISTS users")
-        cur.execute("DROP TABLE IF EXISTS requests")
-        cur.execute("DROP TABLE IF EXISTS blacklist_tokens")
         cur.execute("CREATE TABLE users(id serial PRIMARY KEY, email varchar,\
          username varchar, role varchar, password varchar);")
-        cur.execute("CREATE TABLE blacklist_tokens(id serial PRIMARY KEY, token varchar,\
-         blacklisted_on date);")
-        cur.execute("CREATE TABLE requests(id serial PRIMARY KEY, user_id integer, \
-        category varchar, location varchar, req_date date, req_time time, description varchar, \
-        status varchar, isresolved boolean);")
+         #create ADmin user
         password = sha256_crypt.encrypt("pass123")
         cur.execute("INSERT INTO users(email, username, role, password) VALUES (%s, %s, %s, %s)",\
         ("root@gmail.com", "dess", "Admin", password))
         cur.execute("SELECT * FROM users")
         items = cur.fetchall()
         print(items)
+        print("Table Users Successfullyn Created")
         conn.commit()
 
     except:
-        print "I am unable to connect to the database here"
+        print "Unable to create users table"
     
+def create_requests():
+    """ Function To create requests table"""    
+    try:
+        
+        cur = conn.cursor()
+        cur.execute("DROP TABLE IF EXISTS requests")
+        cur.execute("CREATE TABLE requests(id serial PRIMARY KEY, user_id integer, \
+        category varchar, location varchar, req_date date, req_time time, description varchar, \
+        status varchar, isresolved boolean);")
+        print("Table requests Successfullyn Created")
+        conn.commit()
+
+    except:
+        print "Unable to create requests table"
+
+def create_blacklist_tokens():
+    """ Function To create blacklist_tokens table"""    
+    try:
+        
+        cur = conn.cursor()
+        cur.execute("DROP TABLE IF EXISTS blacklist_tokens")
+        cur.execute("CREATE TABLE blacklist_tokens(id serial PRIMARY KEY, token varchar,\
+         blacklisted_on date);")
+        conn.commit()
+        print("Table blacklist_tokens Successfullyn Created")
+
+    except:
+        print "Unable to create blacklist_tokens table"
 
 
-migrate()
+
+create_users()
+create_requests()
+create_blacklist_tokens()
