@@ -56,7 +56,7 @@ class RequestTests(TestBase):
          "location", "2018-6-5", "10:20 AM", "1",)
     	self.request.create("maintenance", "request descriptions",\
          "location", "2018-6-5", "10:20 AM", "2",)
-    	res = self.request.view_all("1", "Admin")
+    	res = self.request.view_all("1", "Normal")
     	request_description = res[0]['description']
     	self.assertEqual(request_description, "request descriptions")
 

@@ -1,5 +1,6 @@
 import psycopg2
 import os
+from urlparse import urlparse
 
 dbname = os.getenv("DBNAME", "testdb")
 dbuser = os.getenv("DBUSER", "postgres")
