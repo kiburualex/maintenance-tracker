@@ -14,8 +14,8 @@ def create_users():
          username varchar, role varchar, password varchar);")
          #create ADmin user
         password = sha256_crypt.encrypt("pass123")
-        cur.execute("INSERT INTO users(email, username, role, password) VALUES (%s, %s, %s, %s)",\
-        ("root@gmail.com", "dess", "Admin", password))
+        cur.execute("INSERT INTO users( username, email, role, password) VALUES (%s, %s, %s, %s)",\
+        ( "dess","root@gmail.com", "Admin", password))
         cur.execute("SELECT * FROM users")
         items = cur.fetchall()
         print(items)

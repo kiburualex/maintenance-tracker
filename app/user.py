@@ -72,6 +72,13 @@ class User_details(object):
         else:
             return True
 
+    def valid_email(self, email):
+        """check valid email"""
+        if not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email.strip()):
+            return False
+        else:
+            return True
+
     def username_exist(self, username):
         """ check if user with the same username already exist """
         cur = conn.cursor()

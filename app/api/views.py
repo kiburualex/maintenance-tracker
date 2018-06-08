@@ -56,14 +56,17 @@ def register():
         return jsonify(response="Make sure you are passing all\
          the values and valid json data"), 400
     # pass the details to the register method
-    res = user_object.register(username, email, password, cnfpassword)
-    if res == "Registration successfull":
-        res = user_object.serialiser_user(username)
+    if user_object.valid_email(email) is True:
+        res = user_object.register(username, email, password, cnfpassword)
+        if res == "Registration successfull":
+            res = user_object.serialiser_user(username)
 
-        return jsonify({"user": res, "message": "Registration \
-        Successfull. You can login now at /api/v2/auth/login"}), 201
+            return jsonify({"user": res, "message": "Registration \
+            Successfull. You can login now at /api/v2/auth/login"}), 201
+        else:
+            return jsonify(response=res), 409
     else:
-        return jsonify(response=res), 409
+        return jsonify(response="Invalid Email"), 409
 
 
 @api.route('/auth/login', methods=['POST'])

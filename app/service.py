@@ -73,8 +73,8 @@ class Services(object):
             user_id=item[1],
             category=item[2],
             location=item[3],
-            date=item[4],
-            time=item[5],
+            date=item[4].isoformat(),
+            time=item[5].isoformat(),
             description=item[6],
             status=item[7],
             isresolved=item[8]
@@ -96,8 +96,8 @@ class Services(object):
                     user_id=item[1],
                     category=item[2],
                     location=item[3],
-                    date=item[4],
-                    description=item[6],
+                    date=item[4].isoformat(),
+                    description=item[6].isoformat(),
                     status=item[7],
                     isresolved=item[8]
                 )
