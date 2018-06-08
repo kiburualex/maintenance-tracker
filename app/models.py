@@ -65,7 +65,7 @@ class User(Store):
         return users
 
 
-    def fetch_by_username(self, username):
+    def find_by_username(self, username):
         self.cur.execute(
             "SELECT * FROM users where username=%s", (username, ))
 
@@ -73,7 +73,7 @@ class User(Store):
 
         if user:
             return self.serializer(user)
-        return None
+        return False
 
     def serializer(self, user):
         return dict(
@@ -96,6 +96,11 @@ class User(Store):
     def hash_password(self, password):
         """Hash Password """
         h_pass = sha256_crypt.encrypt(password)
+        return h_pass
+
+    def verify_password(self, password, h_pass):
+        """ Verify Password"""
+        h_pass = sha256_crypt.verify(password, h_pass)
         return h_pass
 
     def serialiser_user(self, user):

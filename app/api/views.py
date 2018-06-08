@@ -12,6 +12,7 @@ from . import api
 request_object = Services()
 user_object = User_details()
 jwt_obj = Jwt_details()
+userObj = User()
 
 @api.before_app_request
 def before_request():
@@ -25,12 +26,9 @@ def before_request():
             if isinstance(res, int) and not jwt_obj.is_blacklisted(access_token):
                 # check if no error in string format was returned
                 # find the user with the id on the token
-                print(res)
                 user = User()             
-                res = user.user_by_id(id=res)
-                print(res['id'])
+                res = userObj.user_by_id(id=res)
                 g.userid = res['id']
-                print(g.userid)
                 g.role = res['role']
                 return
             return jsonify({"message": "Please register or \
@@ -114,24 +112,21 @@ def login():
     """
     A route to handle user login
     """
+    user_details = request.get_json()
     try:
-        user_details = request.get_json()
-        username = user_details['username']
-        password = user_details['password']
+        user = userObj.find_by_username(user_details['username'])
+        if user and userObj.verify_password(user_details['password'], user['password']):
+            auth_token = jwt_obj.generate_auth_token(user["id"])
+            return jsonify({"user": user, "message": "Login Successfull.\
+            ", "Access token": auth_token}), 201
+        else:  
+            #no user found, return an error message
+            response = {'message': 'invalid username or password, \
+            Please try again'}
+            return jsonify(response), 401
     except (ValueError, KeyError, TypeError):
         return jsonify(response="Make sure you are passing all \
         the values and valid json data"), 400
-
-    res = user_object.login(username, password)
-    if res == "successful":
-        user = user_object.serialiser_user(username)
-        auth_token = jwt_obj.generate_auth_token(user["id"])
-        return jsonify({"user": user, "message": "Login Successfull.\
-         ", "Access token": auth_token}), 201
-    elif res == "wrong password":
-        return jsonify(response=res), 400
-    else:
-        return jsonify(response=res), 404
 
 @api.route('/auth/logout')
 def logout():
