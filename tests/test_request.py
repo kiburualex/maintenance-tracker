@@ -6,13 +6,27 @@ from flask import abort, url_for
 
 from app import create_app
 from app.service import Services
+from flask_testing import TestCase
+from app import create_app
+from migrate import migrate
 
-class RequestTests(unittest.TestCase):
+class TestBase(TestCase):
+
+    def create_app(self):
+
+        # pass in test configurations
+        config_name = 'testing'
+        app = create_app(config_name)
+
+        return app
+
+class RequestTests(TestBase):
     """Define and setup testing class"""
 
     def setUp(self):
         """ Set up request object before each test"""
         self.request = Services()
+        migrate()
 
     def tearDown(self):
         """ Clear up objects after every test"""
@@ -21,7 +35,18 @@ class RequestTests(unittest.TestCase):
     def test_isuccessful_created(self):
         """Test if request can create sucessfully with correct fields"""
         res = self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1")
-        self.assertEqual(res, "Request Sent")
+        request_d = dict(
+            id=1,
+            user_id=1,
+            category="maintenance",
+            location="location",
+            date="2018-6-5",
+            time="10:20 AM",
+            description="request descriptions",
+            status="Pending",
+            isresolved=False
+        )
+        self.assertEqual(res, request_d)
 
     def test_create_existing_request(self):
     	""" Test if a request can be created twice"""
@@ -39,9 +64,9 @@ class RequestTests(unittest.TestCase):
          "location", "2018-6-5", "10:20 AM", "1",)
     	self.request.create("maintenance", "request descriptions",\
          "location", "2018-6-5", "10:20 AM", "2",)
-    	res = self.request.view_all("1")
+    	res = self.request.view_all("1", "Admin")
     	request_description = res[0]['description']
-    	self.assertIs(request_description, "request descriptions")
+    	self.assertEqual(request_description, "request descriptions")
 
     def test_filter_by_id(self):
         """Test if the method finds the exactly specified id"""
@@ -53,11 +78,11 @@ class RequestTests(unittest.TestCase):
     
     def test_valid_category(self):
         """Test if the method can detect valid category"""
-        res = self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1",)
-        self.assertEqual(res, "Request Sent")
+        res = self.request.valid_category("maintenance")
+        self.assertEqual(res, True)
 
     def test_invalid_category(self):
         """Test if the method can detect invalid category"""
-        res = self.request.create("other", "request descriptions", "location", "2018-6-5", "10:20 AM", "1",)
-        self.assertEqual(res, "Invalid Category. Category should either be maintenance or repair")
+        res = self.request.valid_category("other")
+        self.assertEqual(res, False)
      

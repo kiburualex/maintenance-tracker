@@ -13,7 +13,7 @@ class User_details(object):
         # A list to hold all user objects
         self.user_list = []
 
-    def register(self, username, name, password, cnfpassword):
+    def register(self, username, email, password, cnfpassword):
         """A method to register users with correct and valid details"""
 
         # empty dict to hold dgtails of the user to be created
@@ -23,13 +23,13 @@ class User_details(object):
         else:
             # checkif a user with that username exists
             if self.username_exist(username):
-                return "User Already Exists"
+                return "Username already exists."
             else:
                 # validate password and username
                 if not re.match("^[a-zA-Z0-9_]*$", username):
                     return "Username can only contain alphanumeric characters"
                 elif password != cnfpassword:
-                    return "passwords do not match"
+                    return "passwords do not match" 
                 elif len(password) < 6:
                     return "Password too short"
                 else:
@@ -38,9 +38,9 @@ class User_details(object):
                     role = "Normal"
                     cur = conn.cursor()
                     cur.execute(
-                        "INSERT INTO users(name, username, role, \
+                        "INSERT INTO users(email, username, role, \
                         password) VALUES (%s, %s, %s, %s)",
-                        (name, username, role, h_pass))
+                        (email, username, role, h_pass))
                     cur.execute(
                         "SELECT * FROM users WHERE username = %s;",
                         (username,))
@@ -63,7 +63,7 @@ class User_details(object):
                         return "successful"
                     else:
                         return "wrong password"
-                return "user does not exist", 200
+                return "user does not exist"
 
     def valid_username(self, username):
         """check username length and special characters"""
@@ -97,7 +97,7 @@ class User_details(object):
         items = cur.fetchone()
         conn.commit()
         user_details['id'] = items[0]
-        user_details['name'] = items[1]
+        user_details['email'] = items[1]
         user_details['username'] = items[2]
         user_details['role'] = items[3]
         user_details['password'] = items[4]
@@ -111,7 +111,7 @@ class User_details(object):
         items = cur.fetchone()
         conn.commit()
         user_details['id'] = items[0]
-        user_details['name'] = items[1]
+        user_details['email'] = items[1]
         user_details['username'] = items[2]
         user_details['role'] = items[3]
         user_details['password'] = items[4]
