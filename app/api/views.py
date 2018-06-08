@@ -21,7 +21,7 @@ def before_request():
             g.user = None
             access_token = auth_header.split(" ")[1]
             res = jwt_obj.decode_auth_token(access_token)
-            if isinstance(res, int):
+            if isinstance(res, int) and not jwt_obj.is_blacklisted(access_token):
                 # check if no error in string format was returned
                 # find the user with the id on the token
                 user = user_object.user_by_id(id=res)
@@ -90,6 +90,21 @@ def login():
     else:
         return jsonify(response=res), 404
 
+@api.route('/auth/logout')
+def logout():
+    """store the access_token in blacklist when a user logs out"""
+    auth_header= request.headers.get('Authorization')
+    access_token = auth_header.split(" ")[1]
+    #check is the token is valid
+    res = jwt_obj.decode_auth_token(access_token)
+    if isinstance(res, int) and not jwt_obj.is_blacklisted(access_token):
+        #the token is still valid and not in blasklist
+        blasklisted_token = jwt_obj.blacklist_token(access_token)
+        if blasklisted_token is True:
+            return jsonify({"message" : "logout successfuly."}), 200
+        else:
+            return jsonify({"message" : "Error While loging out."}), 500
+    return jsonify({"message" : "you are already logged out"}), 401
 
 @api.route('/users/requests', methods=['GET', 'POST'])
 def userrequests():

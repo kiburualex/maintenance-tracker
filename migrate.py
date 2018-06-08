@@ -12,8 +12,11 @@ def migrate():
         cur = conn.cursor()
         cur.execute("DROP TABLE IF EXISTS users")
         cur.execute("DROP TABLE IF EXISTS requests")
+        cur.execute("DROP TABLE IF EXISTS blacklist_tokens")
         cur.execute("CREATE TABLE users(id serial PRIMARY KEY, email varchar,\
          username varchar, role varchar, password varchar);")
+        cur.execute("CREATE TABLE blacklist_tokens(id serial PRIMARY KEY, token varchar,\
+         blacklisted_on date);")
         cur.execute("CREATE TABLE requests(id serial PRIMARY KEY, user_id integer, \
         category varchar, location varchar, req_date date, req_time time, description varchar, \
         status varchar, isresolved boolean);")
