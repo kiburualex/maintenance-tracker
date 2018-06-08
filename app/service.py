@@ -74,6 +74,7 @@ class Services(object):
             category=item[2],
             location=item[3],
             date=item[4],
+            time=item[5],
             description=item[6],
             status=item[7],
             isresolved=item[8]

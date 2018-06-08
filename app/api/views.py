@@ -49,14 +49,14 @@ def register():
     try:
         user_details = request.get_json()
         username = user_details['username']
-        name = user_details['name']
+        email = user_details['email']
         password = user_details['password']
         cnfpassword = user_details['cnfpass']
     except (ValueError, KeyError, TypeError):
         return jsonify(response="Make sure you are passing all\
          the values and valid json data"), 400
     # pass the details to the register method
-    res = user_object.register(username, name, password, cnfpassword)
+    res = user_object.register(username, email, password, cnfpassword)
     if res == "Registration successfull":
         res = user_object.serialiser_user(username)
 

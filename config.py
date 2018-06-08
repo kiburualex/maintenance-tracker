@@ -28,6 +28,7 @@ class TestingConfig(Config):
 	"""
 
 	TESTING = True
+	SECRET_KEY = "itsasecret"
 
 app_config = {
 	'development': DevelopmentConfig,
