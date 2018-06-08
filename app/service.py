@@ -138,8 +138,8 @@ class Services(object):
             self.request_details['user_id'] = item[1]
             self.request_details['id'] = item[0]
             self.request_details['isresolved'] = item[8]
-            self.request_list.append(self.request_details)
-            return self.request_list
+            
+            return self.request_details
         return "Request Doesnt Exist"
 
     def update(self, reqid, category, description, location, date, time):
