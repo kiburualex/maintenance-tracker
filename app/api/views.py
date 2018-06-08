@@ -1,7 +1,9 @@
 import uuid
+import re
 from app.user import User_details
 from app.service import Services
 from app.jwtfile import Jwt_details
+from app.models import User, Store
 from flask import request, json, jsonify, url_for, \
     session, abort, render_template, g
 
@@ -10,7 +12,6 @@ from . import api
 request_object = Services()
 user_object = User_details()
 jwt_obj = Jwt_details()
-
 
 @api.before_app_request
 def before_request():
@@ -24,9 +25,13 @@ def before_request():
             if isinstance(res, int) and not jwt_obj.is_blacklisted(access_token):
                 # check if no error in string format was returned
                 # find the user with the id on the token
-                user = user_object.user_by_id(id=res)
-                g.userid = user['id']
-                g.role = user['role']
+                print(res)
+                user = User()             
+                res = user.user_by_id(id=res)
+                print(res['id'])
+                g.userid = res['id']
+                print(g.userid)
+                g.role = res['role']
                 return
             return jsonify({"message": "Please register or \
             login to continue"}), 401
@@ -34,8 +39,43 @@ def before_request():
             return jsonify(response="Authorization header or \
             acess token is missing."), 400
 
+def validdate_data(data):
+    """validate user details"""
+    try:
+        #check if there are specil characters in the username
+        if not re.match("^[a-zA-Z0-9_]*$", data['username'].strip()):
+            return "username  can only contain alphanumeric characters"
+        #check if the username is more than 3 characters
+        elif len(data['username'].strip()) < 3:
+            return "username must be more than 3 characters"
+        #check if the name contains only numbers or underscore
+        elif not re.match("[a-zA-Z]{3,}_*[0-9_]*[a-zA-Z]*_*", data['username'].strip()):
+            return "username must have atleast 3 letters before number or underscore"
+        elif not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
+            return "please provide a valid email"
+        else:
+            return "valid"
+    except Exception as error:
+        return "please provide all the fields, missing " + str(error)
 
-@api.route('/')
+def validate_password(data):
+    """validate the password and return appropriate response"""
+    try:
+        #chack for spaces in password
+        if " " in data["password"]:
+            return "password should be one word, no spaces"
+        elif len(data['password'].strip()) < 6:
+            return "Password should have atleast 6 characters"
+        #check if the passwords mact
+        elif  data['password'] != data['cnfpass']:
+            return "passwords do not match"
+        else:
+            return "valid"
+    #some data is missing and a keyError exception was raised
+    except Exception as error:
+        return "please provide all the fields, missing " + str(error)
+
+@api.route('/') 
 def index():
     """
     Index route test
@@ -46,27 +86,27 @@ def index():
 @api.route('/auth/register', methods=['POST'])
 def register():
     """A route to handle user registration"""
-    try:
-        user_details = request.get_json()
-        username = user_details['username']
-        email = user_details['email']
-        password = user_details['password']
-        cnfpassword = user_details['cnfpass']
-    except (ValueError, KeyError, TypeError):
-        return jsonify(response="Make sure you are passing all\
-         the values and valid json data"), 400
-    # pass the details to the register method
-    if user_object.valid_email(email) is True:
-        res = user_object.register(username, email, password, cnfpassword)
-        if res == "Registration successfull":
-            res = user_object.serialiser_user(username)
-
-            return jsonify({"user": res, "message": "Registration \
-            Successfull. You can login now at /api/v2/auth/login"}), 201
-        else:
-            return jsonify(response=res), 409
+    
+    data = request.get_json()
+    #validate the data
+    res = validdate_data(data)
+    check_pass = validate_password(data)
+    if res is not "valid":
+        return jsonify({"message" : res}), 400
+    elif check_pass is not "valid":
+        return jsonify({"message" : check_pass}), 400
     else:
-        return jsonify(response="Invalid Email"), 409
+        try:
+            username = data['username']
+            email = data['email']
+            password = data['password']
+            user = User(username, email, password)
+            res = user.add()
+            return jsonify(res), 201
+        except Exception as error:
+            #an error occured when trying to register the user
+            response = {'messageu' : str(error)}
+            return jsonify(response), 401
 
 
 @api.route('/auth/login', methods=['POST'])

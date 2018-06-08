@@ -67,7 +67,7 @@ class Services(object):
         conn.commit()
         cur.execute("SELECT * FROM requests WHERE id=%s;", (id,))
         item = cur.fetchone()
-        print item
+        
         request = dict(
             id=item[0],
             user_id=item[1],

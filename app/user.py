@@ -4,6 +4,7 @@ import re
 import uuid
 from connect import conn
 from passlib.hash import sha256_crypt
+from .models import User
 
 
 class User_details(object):
@@ -112,14 +113,6 @@ class User_details(object):
 
     def user_by_id(self, id):
         """ Serialize tuple into dictionary """
-        user_details = {}
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE id = %s;", (id,))
-        items = cur.fetchone()
-        conn.commit()
-        user_details['id'] = items[0]
-        user_details['email'] = items[1]
-        user_details['username'] = items[2]
-        user_details['role'] = items[3]
-        user_details['password'] = items[4]
-        return user_details
+        user = User() 
+        res = user.user_by_id(id)
+        return res
