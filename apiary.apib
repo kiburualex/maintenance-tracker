@@ -61,9 +61,17 @@ you can login a user by sending their username and password
 + Response 200 (application/json)
 
             {
-                "response" : "login successful"
+                "Access token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1Mjg1MzYzNjIsInN1YiI6MSwiZXhwIjoxNTI4NTM5MzYyfQ.fzS9f1diVTebrM5vTIMFuFPpa420iKFVkl90Z2fNlWM",
+                "message": "Login Successfull.            ",
+                "user": {
+                    "email": "Admin",
+                    "id": 1,
+                    "name": "root@gmail.com",
+                    "password": "$5$rounds=535000$Xyhuy5ixglv9j5.c$bs6IYYtDCMCIGhgk9TQhey9RMMUeBZvKzo0FLeXGlD8",
+                    "username": "dess"
+                }
             }
-            
+                        
 + Response 403 (application/json)
 
             {
@@ -74,7 +82,8 @@ you can login a user by sending their username and password
 
 ### Create a request [POST]
 
-You can create a request by sending request category, description and location
+You can create a request by sending request category, description and location.
+Request should include Authorization header and access token
 
 + Request (application/json)
 
@@ -132,7 +141,7 @@ You can create a request by sending request category, description and location
 
 ### update request [PUT]
 
-you can update a request by sending the request id together with the new category, description, location, date and time
+you can update a request by sending the request id together with the new category, description
 
 + Request (application/json)
 
