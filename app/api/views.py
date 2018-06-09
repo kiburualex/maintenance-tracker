@@ -272,21 +272,23 @@ def admin_approve(reqid):
 def admin_disapprove(reqid):
     """ Admin endpoint to disapprove requests"""
     if g.role == "Admin":
-        isexist = request_object.request_exist_by_id(reqid)
-        if isexist:
-            res = request_object.is_resolved(reqid)
-            if res is False:
-                resp = request_object.disapprove(reqid)
-                if resp is True:
-                    requests = request_object.find_by_id(reqid)
-                    return jsonify(requests), 200
-                else:
-                    return jsonify(response="Error Disapproving \
-                    the requests"), 304
-            else:
-                return jsonify(response="Request is already resolved"), 409
-        else:
+        isexist = requestObj.fetch_by_id(reqid)
+       
+        if not isexist:
             return jsonify(response="Request doesnt exists"), 404
+        else:   
+            if isexist['isresolved'] is True:
+                return jsonify({"request":isexist,"response":"Request is already resolved"}), 409
+            elif isexist['status'] != "Pending":
+                return jsonify({"request":isexist,"response":"Request is already approved"}), 409
+            else:                
+                try:
+                    resp = requestObj.disapprove(reqid) 
+                    return jsonify({"message":"Disapproved Successfully","Request":resp}), 200
+                except Exception as error:
+                    #an error occured when trying to update request
+                    response = {'message' : str(error)}
+                    return jsonify(response), 40         
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
