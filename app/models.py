@@ -207,6 +207,15 @@ class Service(Store):
             "DELETE FROM requests WHERE public_id=%s", (reqid, ))
         self.save()
 
+    def approve(self, reqid):
+        """ A method to Approve requests """
+        status = "Approved"
+        self.cur.execute(
+            "UPDATE requests SET status = %s WHERE id \
+                = %s;", (status, reqid))
+        self.save()
+        return self.fetch_by_id(reqid)
+
     def serializer(self, item):
         return dict(
             id=item[0],
