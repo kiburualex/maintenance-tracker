@@ -11,9 +11,10 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 try:
     if os.getenv("FLASK_CONFIG") == "development":
         conn = psycopg2.connect(dbname=dbname, user=dbuser, host=dbhost, password=dbpass)
-    elif os.getenv("FLASK_CONFIG") == "testing":
-        conn = psycopg2.connect(dbname=dbname, user=dbuser, password=dbpass)
     elif os.getenv("FLASK_CONFIG") == "production":
         conn = psycopg2.connect(DATABASE_URL)
+    else:
+        conn = psycopg2.connect(dbname=dbname, user=dbuser, password=dbpass)
+
 except:
     print "I am unable to connect to the database"
