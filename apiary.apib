@@ -1,11 +1,11 @@
 FORMAT: 1A
-HOST: http://mtracker28.herokuapp.com/api/v1/users/
+HOST: http://mtracker28.herokuapp.com/api/v2/
 
 # mtracker
 
 Maintenance Tracker App is an application that provides users with the ability to reach out to operations or repairs department.
 
-## User Registration [/register]
+## User Registration [/auth/register]
 
 ### Register a new user [POST]
 
@@ -45,7 +45,7 @@ You can create a user by sennding a json request with username,
                 "response" : "passwords do not match"
             }
 
-## Login [/login]
+## Login [/auth/login]
 
 ### Login a user [POST]
 
@@ -70,26 +70,24 @@ you can login a user by sending their username and password
                 "response" : "wrong username or password"
             }
 
-## requests [/requests]
+## requests [/users/requests]
 
 ### Create a request [POST]
 
-You can create a request by sending request category, description, location, date and time 
+You can create a request by sending request category, description and location
 
 + Request (application/json)
 
             {
                 "category":"category",
                 "description" : "request description",
-                "location":"location",
-                "date":"2018-6-20",
-                "time":"11:10 AM"
+                "location":"location"
             }
             
 + Response 201 (application/json)
 
             {
-                "response" : "Request send"
+                "response" : "Request Created successfully"
             }
             
 + Response 409 (application/json)
@@ -116,7 +114,6 @@ You can create a request by sending request category, description, location, dat
                 "category":"maintenance",
                 "description" : "request description",
                 "date":"2018-6-20",
-                "time":"11:10 AM",
                 "id" : "2be47f9a-d733-11e7-920a-bc8556ecad23",
                 "location":"location",
                 "userid": "2be47f4g-d733-11e7-920a-bc8556ecad23"
@@ -125,7 +122,6 @@ You can create a request by sending request category, description, location, dat
                 "category":"Repair",
                 "description" : "request description",
                 "date":"2018-7-20",
-                "time":"11:10 AM",
                 "id" : "2be47f9a-d733-11e7-920a-bc8556ecad45",
                 "location":"location",
                 "userid": "2be47f4g-d733-11e7-920a-bc8556ecad23"
@@ -134,7 +130,7 @@ You can create a request by sending request category, description, location, dat
         
 ## update request [/requests/<reqid>]
 
-### update request [POST]
+### update request [PUT]
 
 you can update a request by sending the request id together with the new category, description, location, date and time
 
@@ -143,9 +139,7 @@ you can update a request by sending the request id together with the new categor
             {
                 "category":"category",
                 "description" : "request description",
-                "location":"location",
-                "date":"2018-6-20",
-                "time":"11:10 AM"
+                "location":"location"
             }
             
 + Response 200 (application/json)
@@ -171,3 +165,164 @@ you can update a request by sending the request id together with the new categor
             {
                 "response" : "no request with given id"
             }
+            
+
+## All Requests [/requests]
+### Fetch all users requests [GET]
+
+Admin can view all the requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 3,
+                "isresolved": false,
+                "location": "Description goes ",
+                "status": "Pending",
+                "user_id": 2
+            },
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 4,
+                "isresolved": false,
+                "location": "Description goes ",
+                "status": "Pending",
+                "user_id": 2
+            },
+        ]
+        
++ Response 401 (application/json)
+
+        {
+            "response": "Sorry you don't have enough rights to view this resource"
+        }
+
+## Approve requests [/requests/<reqid>/approve]
+### Approve Users Requests [GET]
+
+Admin can approve requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+          {
+            "message":"Approved Successfully",
+            
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 3,
+                "isresolved": false,
+                "location": "Description goes ",
+                "status": "Approved",
+                "user_id": 2
+            }
+          }
+        ]
+        
++ Response 409 (application/json)
+
+        {
+            "response": "Request is already Approved"
+        }
+
+## Disapprove requests [/requests/<reqid>/disapprove]
+### Disapprove Users Requests [GET]
+
+Admin can disapprove requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+          {
+            "message":"Approved Successfully",
+            
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 3,
+                "isresolved": false,
+                "location": "Description goes ",
+                "status": "Disaproved",
+                "user_id": 2
+            }
+          }
+        ]
+        
++ Response 409 (application/json)
+
+        {
+            "response": "Request is already Disapproved"
+        }
+
+## Resolve requests [/requests/<reqid>/resolve]
+### Resolve Users Requests [GET]
+
+Admin can resolve requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+          {
+            "message":"Resolved Successfully",
+            
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 3,
+                "isresolved": true,
+                "location": "Description goes ",
+                "status": "Resolved",
+                "user_id": 2
+            }
+          }
+        ]
+        
++ Response 409 (application/json)
+
+        {
+            "response": "Request is already Resolved"
+        }
+
+## Delete requests [/requests/<reqid>/delete]
+### Delete User's Requests [GET]
+
+Admin can delete requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+          {
+            "message":"Request deleted Successfully"
+        ]
+        
++ Response 404 (application/json)
+
+        {
+            "response": "Request doesn't exist"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "response": "Sorry you don't have enough rights to view this resource"
+        }
