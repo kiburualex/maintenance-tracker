@@ -236,7 +236,7 @@ def admin_requests():
         return jsonify(res), 200
     else:
         return jsonify(response="Sorry you don't have enough \
-        rights to view this resource")
+        rights to view this resource"), 401
 
 
 @api.route('/requests/<reqid>/approve')
