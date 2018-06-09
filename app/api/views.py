@@ -259,7 +259,7 @@ def admin_approve(reqid):
                 except Exception as error:
                     #an error occured when trying to update request
                     response = {'message' : str(error)}
-                    return jsonify(response), 40         
+                    return jsonify(response), 401        
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
@@ -285,7 +285,7 @@ def admin_disapprove(reqid):
                 except Exception as error:
                     #an error occured when trying to update request
                     response = {'message' : str(error)}
-                    return jsonify(response), 40         
+                    return jsonify(response), 401        
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
@@ -311,7 +311,29 @@ def admin_resolve(reqid):
                 except Exception as error:
                     #an error occured when trying to update request
                     response = {'message' : str(error)}
-                    return jsonify(response), 40         
+                    return jsonify(response), 401         
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
+
+
+@api.route('/requests/<reqid>/delete')
+def admin_delete(reqid):
+    """ Admin endpoint to delete requests"""
+    if g.role == "Admin":
+        isexist = requestObj.fetch_by_id(reqid)
+       
+        if not isexist:
+            return jsonify(response="Request doesnt exists"), 404
+        else:                
+            try:
+                resp = requestObj.delete(reqid) 
+                return jsonify(response=resp), 200
+            except Exception as error:
+                #an error occured when trying to update request
+                response = {'message' : str(error)}
+                return jsonify(response), 401        
+    else:
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
+

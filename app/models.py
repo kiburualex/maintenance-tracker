@@ -204,8 +204,9 @@ class Service(Store):
 
     def delete(self, reqid):
         self.cur.execute(
-            "DELETE FROM requests WHERE public_id=%s", (reqid, ))
+            "DELETE FROM requests WHERE id=%s", (reqid, ))
         self.save()
+        return "Deleted Successfully"
 
     def approve(self, reqid):
         """ A method to Approve requests """
