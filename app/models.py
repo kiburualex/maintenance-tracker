@@ -150,7 +150,6 @@ class Service(Store):
                     (self.userid, self.category, self.location, self.req_date,
                      self.description, self.status, self.isresolved))
         item = self.cur.fetchone()[0]
-        print(item)
         self.save()
         return self.fetch_by_id(item)
     
@@ -174,7 +173,17 @@ class Service(Store):
         request_tuple = self.cur.fetchone()
         if request_tuple:
             return self.serializer(request_tuple)
-        return "You have no requests yet"
+        return False
+
+    def is_owner(self, reqid, userid):
+        """To check if request belong to the user"""
+        self.cur.execute(
+            "SELECT * FROM requests WHERE id=%s", (reqid, ))
+        request_tuple = self.cur.fetchone()
+        if request_tuple[1] == userid:
+            return True
+        return False
+
 
     def fetch_by_userid(self, user_id):
         self.cur.execute(
@@ -182,14 +191,16 @@ class Service(Store):
         requests_tuple = self.cur.fetchall()
         if requests_tuple:
             return [self.serializer(request) for request in requests_tuple]
-        return None
+        return "You have no requests yet"
 
     def update(self, reqid):
         self.cur.execute("UPDATE requests SET category = %s, description \
             = %s, location = %s, req_date = %s WHERE id \
             = %s;", (self.category, self.description, self.location, self.req_date, reqid)
         )
+        item = self.fetch_by_id(reqid)
         self.save()
+        return item
 
     def delete(self, reqid):
         self.cur.execute(

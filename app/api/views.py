@@ -123,7 +123,7 @@ def register():
             return jsonify(res), 201
         except Exception as error:
             #an error occured when trying to register the user
-            response = {'messageu' : str(error)}
+            response = {'message' : str(error)}
             return jsonify(response), 401
 
 
@@ -201,30 +201,34 @@ def userrequests():
 @api.route('/users/requests/<reqid>', methods=['GET', 'PUT'])
 def get_request(reqid):
     if request.method == 'PUT':
-        try:
-            request_details = request.get_json()
-            category = request_details['category']
-            description = request_details['description']
-            location = request_details['location']
-            date = request_details['date']
-            time = request_details['time']
-        except (ValueError, KeyError, TypeError):
-            return jsonify(response="Make sure you are passing all \
-            the values and valid json data"), 400
-
-        res = request_object.update(
-            reqid, category, description, location, date, time)
-        if res == "update success":
-            requests = request_object.find_by_id(reqid)
-            ress = jsonify({"message": res, "request": requests})
-            return ress, 201
-        elif res == "no request with given id":
-            return jsonify(response=res), 404
+        request_details = request.get_json()
+        check_details = validdate_req_data(request_details)
+        if check_details is not "valid":
+            return jsonify({"message" : check_details}), 400
         else:
-            return jsonify(response=res), 409
+            if requestObj.fetch_by_id(reqid) is False:
+                return jsonify({"message" : "The request doesnt exist"}), 404
+            else:
+                if requestObj.is_owner(reqid, g.userid) is False:
+                    return jsonify({"message" : "Sorry you cant edit this request"}), 401
+                else:
+                    try:
+                        category = request_details['category']
+                        description = request_details['description']
+                        location = request_details['location']
+                        req = Service(category, location, description, g.userid)
+                        res = req.update(reqid)
+                        return jsonify({"message":"Update succesfful","response":res}), 201
+                    except Exception as error:
+                        #an error occured when trying to update request
+                        response = {'message' : str(error)}
+                        return jsonify(response), 401
 
-    requests = request_object.find_by_id(reqid)
-    return jsonify(requests), 200
+    item = requestObj.fetch_by_id(reqid)
+    if item is False:
+        return jsonify({"message" : "The request doesnt exist"}), 404
+    else:
+        return jsonify(item), 200
 
 
 @api.route('/requests')
