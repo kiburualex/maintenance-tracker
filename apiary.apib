@@ -1,0 +1,337 @@
+FORMAT: 1A
+HOST: http://mtracker28.herokuapp.com/api/v2/
+
+# mtracker
+
+Maintenance Tracker App is an application that provides users with the ability to reach out to operations or repairs department.
+
+## User Registration [/auth/register]
+
+### Register a new user [POST]
+
+You can create a user by sennding a json request with username, 
+, password, and password confirmation. password must be atleast 6 characters long.
+
++ Request(application/json)
+
+            {
+                "username" : "sampleusername",
+                "email" : "example@gmail.com",
+                "password" : "password",
+                "cnfpass" : "password"
+            }
+
++ Response 201 (application/json)
+            
+            {
+                "response" : "Registration successfull"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "Username already exists"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "Username can only contain alphanumeric characters"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "passwords do not match"
+            }
+
+## Login [/auth/login]
+
+### Login a user [POST]
+
+you can login a user by sending their username and password
+
++ Request (application/json)
+
+            {
+                "username":"sampleusername",
+                "password" : "password"
+            }
+            
++ Response 200 (application/json)
+
+            {
+                "Access token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1Mjg1MzYzNjIsInN1YiI6MSwiZXhwIjoxNTI4NTM5MzYyfQ.fzS9f1diVTebrM5vTIMFuFPpa420iKFVkl90Z2fNlWM",
+                "message": "Login Successfull.            ",
+                "user": {
+                    "email": "Admin",
+                    "id": 1,
+                    "name": "root@gmail.com",
+                    "password": "$5$rounds=535000$Xyhuy5ixglv9j5.c$bs6IYYtDCMCIGhgk9TQhey9RMMUeBZvKzo0FLeXGlD8",
+                    "username": "dess"
+                }
+            }
+                        
++ Response 403 (application/json)
+
+            {
+                "response" : "wrong username or password"
+            }
+
+## requests [/users/requests]
+
+### Create a request [POST]
+
+You can create a request by sending request category, description and location.
+Request should include Authorization header and access token
+
++ Request (application/json)
+
+            {
+                "category":"category",
+                "description" : "request description",
+                "location":"location"
+            }
+            
++ Response 201 (application/json)
+
+            {
+                "response" : "Request Created successfully"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "Request exists"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "description too short or invalid"
+            }
+        
+
+### Fetch all user requests [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+            {
+                "category":"maintenance",
+                "description" : "request description",
+                "date":"2018-6-20",
+                "id" : "2be47f9a-d733-11e7-920a-bc8556ecad23",
+                "location":"location",
+                "userid": "2be47f4g-d733-11e7-920a-bc8556ecad23"
+            },
+            {
+                "category":"Repair",
+                "description" : "request description",
+                "date":"2018-7-20",
+                "id" : "2be47f9a-d733-11e7-920a-bc8556ecad45",
+                "location":"location",
+                "userid": "2be47f4g-d733-11e7-920a-bc8556ecad23"
+            }
+        ]
+        
+## update request [/requests/<reqid>]
+
+### update request [PUT]
+
+you can update a request by sending the request id together with the new category, description
+
++ Request (application/json)
+
+            {
+                "category":"category",
+                "description" : "request description",
+                "location":"location"
+            }
+            
++ Response 200 (application/json)
+
+            {
+                "response" : "update success"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "Request cannot be updated, a similar request exists"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "description too short or invalid"
+            }
+            
++ Response 404 (application/json)
+
+            {
+                "response" : "no request with given id"
+            }
+            
+
+## All Requests [/requests]
+### Fetch all users requests [GET]
+
+Admin can view all the requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 3,
+                "isresolved": false,
+                "location": "Description goes ",
+                "status": "Pending",
+                "user_id": 2
+            },
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 4,
+                "isresolved": false,
+                "location": "Description goes ",
+                "status": "Pending",
+                "user_id": 2
+            },
+        ]
+        
++ Response 401 (application/json)
+
+        {
+            "response": "Sorry you don't have enough rights to view this resource"
+        }
+
+## Approve requests [/requests/<reqid>/approve]
+### Approve Users Requests [GET]
+
+Admin can approve requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+          {
+            "message":"Approved Successfully",
+            
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 3,
+                "isresolved": false,
+                "location": "Description goes ",
+                "status": "Approved",
+                "user_id": 2
+            }
+          }
+        ]
+        
++ Response 409 (application/json)
+
+        {
+            "response": "Request is already Approved"
+        }
+
+## Disapprove requests [/requests/<reqid>/disapprove]
+### Disapprove Users Requests [GET]
+
+Admin can disapprove requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+          {
+            "message":"Approved Successfully",
+            
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 3,
+                "isresolved": false,
+                "location": "Description goes ",
+                "status": "Disaproved",
+                "user_id": 2
+            }
+          }
+        ]
+        
++ Response 409 (application/json)
+
+        {
+            "response": "Request is already Disapproved"
+        }
+
+## Resolve requests [/requests/<reqid>/resolve]
+### Resolve Users Requests [GET]
+
+Admin can resolve requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+          {
+            "message":"Resolved Successfully",
+            
+            {
+                "category": "Repair",
+                "date": "Sat, 09 Jun 2018 00:00:00 GMT",
+                "description": "Mombasa",
+                "id": 3,
+                "isresolved": true,
+                "location": "Description goes ",
+                "status": "Resolved",
+                "user_id": 2
+            }
+          }
+        ]
+        
++ Response 409 (application/json)
+
+        {
+            "response": "Request is already Resolved"
+        }
+
+## Delete requests [/requests/<reqid>/delete]
+### Delete User's Requests [GET]
+
+Admin can delete requests from all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+          {
+            "message":"Request deleted Successfully"
+        ]
+        
++ Response 404 (application/json)
+
+        {
+            "response": "Request doesn't exist"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "response": "Sorry you don't have enough rights to view this resource"
+        }
