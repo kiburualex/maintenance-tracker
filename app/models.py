@@ -2,7 +2,6 @@ import psycopg2
 import os
 import re
 from datetime import date, datetime
-from urlparse import urlparse
 from connect import conn
 from passlib.hash import sha256_crypt
 
