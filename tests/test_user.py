@@ -38,7 +38,7 @@ class UserTests(TestBase):
         res = User("desmond", "desmond@mail.com", "pass1234")
         user = res.add()
         self.assertEqual(user["username"], "desmond")
-    
+
     def test_existing_user(self):
         """Test with an already existing user, try registering a user twice"""
         res = User("desmond", "desmond@mail.com", "pass1234")
@@ -46,7 +46,7 @@ class UserTests(TestBase):
         res2 = User("desmond", "desmond@mail.com", "pass1234")
         user = res2.add()
         self.assertEqual(user, "Username Is already taken")
-    
+
     def test_view_all_users(self):
         """Test view all users"""
         res = User("desmond", "desmond@mail.com", "pass1234")

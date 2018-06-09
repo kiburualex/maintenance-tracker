@@ -23,7 +23,7 @@ def before_request():
             if isinstance(res, int) and not jwt_obj.is_blacklisted(access_token):
                 # check if no error in string format was returned
                 # find the user with the id on the token
-                user = User()             
+                user = User()
                 res = userObj.user_by_id(id=res)
                 g.userid = res['id']
                 g.role = res['role']
@@ -90,7 +90,7 @@ def validdate_req_data(data):
     except Exception as error:
         return "please provide all the fields, missing " + str(error)
 
-@api.route('/')  
+@api.route('/')
 def index():
     """
     Index route test
@@ -101,7 +101,7 @@ def index():
 @api.route('/auth/register', methods=['POST'])
 def register():
     """A route to handle user registration"""
-    
+
     data = request.get_json()
     #validate the data
     res = validdate_data(data)
@@ -136,7 +136,7 @@ def login():
             auth_token = jwt_obj.generate_auth_token(user["id"])
             return jsonify({"user": user, "message": "Login Successfull.\
             ", "Access token": auth_token}), 201
-        else:  
+        else:
             #no user found, return an error message
             response = {'message': 'invalid username or password, \
             Please try again'}
@@ -172,10 +172,10 @@ def userrequests():
             return jsonify({"message" : check_details}), 400
         else:
             if requestObj.valid_category(request_details['category']) is False:
-                
+
                 return jsonify(resp="Category should either be Maintenance, maintenance, Repair or repair")
             else:
-                try:                
+                try:
                     category = request_details['category']
                     description = request_details['description']
                     location = request_details['location']
@@ -188,7 +188,7 @@ def userrequests():
                     response = {'messageu' : str(error)}
                     return jsonify(response), 401
     if role == "Admin":
-        requests_list = requestObj.view_all() 
+        requests_list = requestObj.view_all()
         return jsonify(requests_list), 200
     else:
         requests_list = requestObj.fetch_by_userid(userid)
@@ -244,22 +244,22 @@ def admin_approve(reqid):
     """ Admin endpoint to approve requests"""
     if g.role == "Admin":
         isexist = requestObj.fetch_by_id(reqid)
-       
+
         if not isexist:
             return jsonify(response="Request doesnt exists"), 404
-        else:   
+        else:
             if isexist['isresolved'] is True:
                 return jsonify({"request":isexist,"response":"Request is already resolved"}), 409
             elif isexist['status'] != "Pending":
                 return jsonify({"request":isexist,"response":"Request is already approved"}), 409
-            else:                
+            else:
                 try:
                     resp = requestObj.approve(reqid)
                     return jsonify({"message":"Approved Successfully","Request":resp}), 200
                 except Exception as error:
                     #an error occured when trying to update request
                     response = {'message' : str(error)}
-                    return jsonify(response), 401        
+                    return jsonify(response), 401
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
@@ -270,22 +270,22 @@ def admin_disapprove(reqid):
     """ Admin endpoint to disapprove requests"""
     if g.role == "Admin":
         isexist = requestObj.fetch_by_id(reqid)
-       
+
         if not isexist:
             return jsonify(response="Request doesnt exists"), 404
-        else:   
+        else:
             if isexist['isresolved'] is True:
                 return jsonify({"request":isexist,"response":"Request is already resolved"}), 409
             elif isexist['status'] != "Pending":
                 return jsonify({"request":isexist,"response":"Request is already approved"}), 409
-            else:                
+            else:
                 try:
-                    resp = requestObj.disapprove(reqid) 
+                    resp = requestObj.disapprove(reqid)
                     return jsonify({"message":"Disapproved Successfully","Request":resp}), 200
                 except Exception as error:
                     #an error occured when trying to update request
                     response = {'message' : str(error)}
-                    return jsonify(response), 401        
+                    return jsonify(response), 401
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
@@ -296,22 +296,22 @@ def admin_resolve(reqid):
     """ Admin endpoint to dresolve requests"""
     if g.role == "Admin":
         isexist = requestObj.fetch_by_id(reqid)
-       
+
         if not isexist:
             return jsonify(response="Request doesnt exists"), 404
-        else:   
+        else:
             if isexist['isresolved'] is True:
                 return jsonify({"request":isexist,"response":"Request ist already resolved"}), 409
             elif isexist['status'] is not "Pending" or isexist['status'] is not "Disapproved":
                 return jsonify({"request":isexist,"response":"You can only resolve approved Requests"}), 409
-            else:                
+            else:
                 try:
-                    resp = requestObj.resolve(reqid) 
+                    resp = requestObj.resolve(reqid)
                     return jsonify({"message":"Resolved Successfully","Request":resp}), 200
                 except Exception as error:
                     #an error occured when trying to update request
                     response = {'message' : str(error)}
-                    return jsonify(response), 401         
+                    return jsonify(response), 401
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
@@ -322,17 +322,17 @@ def admin_delete(reqid):
     """ Admin endpoint to delete requests"""
     if g.role == "Admin":
         isexist = requestObj.fetch_by_id(reqid)
-       
+
         if not isexist:
             return jsonify(response="Request doesnt exists"), 404
-        else:                
+        else:
             try:
-                resp = requestObj.delete(reqid) 
+                resp = requestObj.delete(reqid)
                 return jsonify(response=resp), 200
             except Exception as error:
                 #an error occured when trying to update request
                 response = {'message' : str(error)}
-                return jsonify(response), 401        
+                return jsonify(response), 401
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401

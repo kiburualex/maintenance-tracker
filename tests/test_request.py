@@ -43,17 +43,17 @@ class RequestTests(TestBase):
         self.assertEqual(req['id'], request_d['id'])
 
     def test_fetch_by_userid(self):
-    	"""Test if filter by userid works"""
+        """Test if filter by userid works"""
         res1 = Service("maintenance", "request descriptions", "location", "1")
         req = res1.add()
         res2 = Service("maintenance", "request descriptions", "location", "1")
         req = res2.add()
-    	res = self.request.fetch_by_userid("1")
-    	request_description = len(res)
-    	self.assertEqual(request_description, 2)
+        res = self.request.fetch_by_userid("1")
+        request_description = len(res)
+        self.assertEqual(request_description, 2)
 
     def test_fetch_by_id(self):
-        """Test if the method finds the exactly specified id"""        
+        """Test if the method finds the exactly specified id"""
         res = Service("maintenance", "request descriptions", "location", "1")
         req = res.add()
         foundrequest = self.request.fetch_by_id(1)
@@ -61,24 +61,24 @@ class RequestTests(TestBase):
         self.assertFalse(self.request.fetch_by_id(4), False)
 
     def test_view_all(self):
-    	"""Test if view all works"""
+        """Test if view all works"""
         res1 = Service("maintenance", "request descriptions", "location", "1")
         res1.add()
         res2 = Service("maintenance", "request descriptions", "location", "1")
         res2.add()
-    	res = self.request.view_all()
-    	count = len(res)
-    	self.assertEqual(count, 2)
+        res = self.request.view_all()
+        count = len(res)
+        self.assertEqual(count, 2)
 
     def test_is_owner(self):
-        """Test if reuest belong to a user"""        
+        """Test if reuest belong to a user"""
         res = Service("maintenance", "request descriptions", "location", "1")
         req = res.add()
         foundrequest = self.request.is_owner(1, 1)
         self.assertEqual(foundrequest, True)
         self.assertFalse(self.request.is_owner(1, 2), False)
 
-    
+
     def test_valid_category(self):
         """Test if the method can detect valid category"""
         res = self.request.valid_category("maintenance")
@@ -88,4 +88,3 @@ class RequestTests(TestBase):
         """Test if the method can detect invalid category"""
         res = self.request.valid_category("other")
         self.assertEqual(res, False)
-     

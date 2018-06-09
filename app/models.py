@@ -49,10 +49,10 @@ class User(Store):
                 VALUES (%s , %s, %s, %s) RETURNING id;
                 """,
                 (self.username, self.email, self.role, hash_pass))
-            id = self.cur.fetchone()[0]
+            userid = self.cur.fetchone()[0]
             self.save()
-            
-            return self.user_by_id(id)
+
+            return self.user_by_id(userid)
         return "Username Is already taken"
 
     def fetch_all(self):
@@ -119,7 +119,7 @@ class User(Store):
         """ Serialize tuple into dictionary """
         self.cur.execute("SELECT * FROM users WHERE id = %s;", (id,))
         user = self.cur.fetchone()
-        
+
         return self.serialiser_user(user)
 
 class Service(Store):
@@ -152,7 +152,7 @@ class Service(Store):
         item = self.cur.fetchone()[0]
         self.save()
         return self.fetch_by_id(item)
-    
+
     def valid_category(self, category):
         """check category provided if maintenance or repair"""
         if category == "maintenance" or category == "repair" or \
@@ -167,9 +167,9 @@ class Service(Store):
         requests = [self.serializer(request) for request in requests_tuple]
         return requests
 
-    def fetch_by_id(self, id):
+    def fetch_by_id(self, reqid):
         self.cur.execute(
-            "SELECT * FROM requests WHERE id=%s", (id, ))
+            "SELECT * FROM requests WHERE id=%s", (reqid, ))
         request_tuple = self.cur.fetchone()
         if request_tuple:
             return self.serializer(request_tuple)
