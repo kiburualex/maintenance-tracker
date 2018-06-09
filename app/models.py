@@ -4,34 +4,18 @@ import re
 from datetime import date, datetime
 from connect import conn
 from passlib.hash import sha256_crypt
+cur = conn.cursor()
 
-class Store(object):
-    def __init__(self):
-        self.conn = conn
-        self.cur = self.conn.cursor()
-
-    def create_table(self, script):
-        self.cur.execute(script)
-        self.save()
-
-    def drop_table(self, table_name):
-        self.cur.execute('DROP TABLE IF EXISTS ' + table_name)
-        self.save()
-
-    def save(self):
-        self.conn.commit()
-
-    def close(self):
-        self.cur.close()
-        self.conn.close()
-
-class User(Store):
+class User(object):
     def __init__(self,username=None, email=None, password=None):
         super(User, self).__init__()
         self.role = "Normal"
         self.username = username
         self.email = email
         self.password = password
+
+    def save(self):
+        conn.commit()
 
     def create(self):
         self.create_table("CREATE TABLE users(id serial PRIMARY KEY, email varchar\
@@ -42,21 +26,21 @@ class User(Store):
     def add(self):
         if self.username_exist(self.username) is False:
             hash_pass = self.hash_password(self.password)
-            self.cur.execute(
+            cur.execute(
                 """
                 INSERT INTO users (username, email, role, password)
                 VALUES (%s , %s, %s, %s) RETURNING id;
                 """,
                 (self.username, self.email, self.role, hash_pass))
-            userid = self.cur.fetchone()[0]
+            userid = cur.fetchone()[0]
             self.save()
 
             return self.user_by_id(userid)
         return "Username Is already taken"
 
     def fetch_all(self):
-        self.cur.execute("SELECT * FROM users")
-        users_tuple = self.cur.fetchall()
+        cur.execute("SELECT * FROM users")
+        users_tuple = cur.fetchall()
         users = []
 
         for user in users_tuple:
@@ -66,14 +50,23 @@ class User(Store):
 
 
     def find_by_username(self, username):
-        self.cur.execute(
+        cur.execute(
             "SELECT * FROM users where username=%s", (username, ))
 
-        user = self.cur.fetchone()
+        user = cur.fetchone()
 
         if user:
             return self.serializer(user)
         return False
+
+    def make_admin(self, username):
+        role = "Admin"
+        cur.execute("UPDATE users SET role = %s\
+         WHERE username = %s;", (role, username)
+        )
+        item = self.find_by_username(username)
+        self.save()
+        return item
 
     def serializer(self, user):
         return dict(
@@ -86,8 +79,8 @@ class User(Store):
 
     def username_exist(self, username):
         """ check if user with the same username already exist """
-        self.cur.execute("SELECT * FROM users WHERE username = %s;", (username,))
-        user = self.cur.fetchone()
+        cur.execute("SELECT * FROM users WHERE username = %s;", (username,))
+        user = cur.fetchone()
         if user:
             return True
         else:
@@ -116,12 +109,12 @@ class User(Store):
 
     def user_by_id(self, id):
         """ Serialize tuple into dictionary """
-        self.cur.execute("SELECT * FROM users WHERE id = %s;", (id,))
-        user = self.cur.fetchone()
+        cur.execute("SELECT * FROM users WHERE id = %s;", (id,))
+        user = cur.fetchone()
 
         return self.serialiser_user(user)
 
-class Service(Store):
+class Service(object):
     def __init__(
             self, category=None, description=None, \
             location=None, userid=None):
@@ -134,21 +127,21 @@ class Service(Store):
         self.isresolved = False
         self.req_date = date.today()
 
+    def save(self):
+        conn.commit()
+
     def create(self):
         self.create_table("CREATE TABLE requests(id serial PRIMARY KEY, user_id integer, \
         category varchar, location varchar, req_date date, description varchar, \
         status varchar, isresolved boolean);")
 
-    def drop(self):
-        self.drop_table("requests")
-
     def add(self):
-        self.cur.execute("INSERT INTO requests(user_id, category,\
+        cur.execute("INSERT INTO requests(user_id, category,\
         location, req_date, description, status,\
         isresolved) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id;",
                     (self.userid, self.category, self.location, self.req_date,
                      self.description, self.status, self.isresolved))
-        item = self.cur.fetchone()[0]
+        item = cur.fetchone()[0]
         self.save()
         return self.fetch_by_id(item)
 
@@ -161,39 +154,39 @@ class Service(Store):
             return False
 
     def view_all(self):
-        self.cur.execute("SELECT * FROM requests")
-        requests_tuple = self.cur.fetchall()
+        cur.execute("SELECT * FROM requests")
+        requests_tuple = cur.fetchall()
         requests = [self.serializer(request) for request in requests_tuple]
         return requests
 
     def fetch_by_id(self, reqid):
-        self.cur.execute(
+        cur.execute(
             "SELECT * FROM requests WHERE id=%s", (reqid, ))
-        request_tuple = self.cur.fetchone()
+        request_tuple = cur.fetchone()
         if request_tuple:
             return self.serializer(request_tuple)
         return False
 
     def is_owner(self, reqid, userid):
         """To check if request belong to the user"""
-        self.cur.execute(
+        cur.execute(
             "SELECT * FROM requests WHERE id=%s", (reqid, ))
-        request_tuple = self.cur.fetchone()
+        request_tuple = cur.fetchone()
         if request_tuple[1] == userid:
             return True
         return False
 
 
     def fetch_by_userid(self, user_id):
-        self.cur.execute(
+        cur.execute(
             "SELECT * FROM requests WHERE user_id=%s", (user_id, ))
-        requests_tuple = self.cur.fetchall()
+        requests_tuple = cur.fetchall()
         if requests_tuple:
             return [self.serializer(request) for request in requests_tuple]
         return "You have no requests yet"
 
     def update(self, reqid):
-        self.cur.execute("UPDATE requests SET category = %s, description \
+        cur.execute("UPDATE requests SET category = %s, description \
             = %s, location = %s, req_date = %s WHERE id \
             = %s;", (self.category, self.description, self.location, self.req_date, reqid)
         )
@@ -202,7 +195,7 @@ class Service(Store):
         return item
 
     def delete(self, reqid):
-        self.cur.execute(
+        cur.execute(
             "DELETE FROM requests WHERE id=%s", (reqid, ))
         self.save()
         return "Deleted Successfully"
@@ -210,7 +203,7 @@ class Service(Store):
     def approve(self, reqid):
         """ A method to Approve requests """
         status = "Approved"
-        self.cur.execute(
+        cur.execute(
             "UPDATE requests SET status = %s WHERE id \
                 = %s;", (status, reqid))
         self.save()
@@ -219,7 +212,7 @@ class Service(Store):
     def disapprove(self, reqid):
         """ A method to Disapprove requests """
         status = "Disapproved"
-        self.cur.execute(
+        cur.execute(
             "UPDATE requests SET status = %s WHERE id \
                 = %s;", (status, reqid))
         self.save()
@@ -229,7 +222,7 @@ class Service(Store):
         """ A method to Disapprove requests """
         status = "Resolved"
         isresolved = True
-        self.cur.execute(
+        cur.execute(
             "UPDATE requests SET status = %s, isresolved = %s WHERE id \
                 = %s;", (status, isresolved, reqid))
         self.save()
