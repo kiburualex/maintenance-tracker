@@ -1,7 +1,5 @@
 import uuid
 import re
-from app.user import User_details
-from app.service import Services
 from app.jwtfile import Jwt_details
 from app.models import User, Store, Service
 from flask import request, json, jsonify, url_for, \
@@ -9,7 +7,6 @@ from flask import request, json, jsonify, url_for, \
 
 from . import api
 
-request_object = Services()
 jwt_obj = Jwt_details()
 userObj = User()
 requestObj = Service()
