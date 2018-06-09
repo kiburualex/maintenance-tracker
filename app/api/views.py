@@ -141,9 +141,10 @@ def login():
             response = {'message': 'invalid username or password, \
             Please try again'}
             return jsonify(response), 401
-    except (ValueError, KeyError, TypeError):
-        return jsonify(response="Make sure you are passing all \
-        the values and valid json data"), 400
+    except Exception as error:
+                    #an error occured when trying to create request
+                    response = {'messageu' : str(error)}
+                    return jsonify(response), 401
 
 @api.route('/auth/logout')
 def logout():
