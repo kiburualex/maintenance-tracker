@@ -32,7 +32,7 @@ def create_requests():
         cur = conn.cursor()
         cur.execute("DROP TABLE IF EXISTS requests")
         cur.execute("CREATE TABLE requests(id serial PRIMARY KEY, user_id integer, \
-        category varchar, location varchar, req_date date, req_time time, description varchar, \
+        category varchar, location varchar, req_date date, description varchar, \
         status varchar, isresolved boolean);")
         print("Table requests Successfullyn Created")
         conn.commit()

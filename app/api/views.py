@@ -3,16 +3,16 @@ import re
 from app.user import User_details
 from app.service import Services
 from app.jwtfile import Jwt_details
-from app.models import User, Store
+from app.models import User, Store, Service
 from flask import request, json, jsonify, url_for, \
     session, abort, render_template, g
 
 from . import api
 
 request_object = Services()
-user_object = User_details()
 jwt_obj = Jwt_details()
 userObj = User()
+requestObj = Service()
 
 @api.before_app_request
 def before_request():
@@ -73,7 +73,27 @@ def validate_password(data):
     except Exception as error:
         return "please provide all the fields, missing " + str(error)
 
-@api.route('/') 
+def validdate_req_data(data):
+    """validate request details"""
+    try:
+        #check if there are special characters in the category
+        if not re.match("^[a-zA-Z0-9_ ]*$", data['category'].strip()) :
+            return "Should only contain alphanemeric characters"
+        #check if the uDescription Must Be more than 10 characters
+        elif len(data['description'].strip()) < 10 or not \
+        re.match("^[a-zA-Z0-9_ ]*$", data['description'].strip()):
+            return "Description should only contain alphanemeric characters\
+             Must Be more than 10 characters"
+        #check if the location contains only numbers or underscore
+        elif not re.match("^[a-zA-Z0-9_]*$", data['location'].strip()):
+            return "location should only contain alphanemeric characters\
+            and have atleast 3 letters"
+        else:
+            return "valid"
+    except Exception as error:
+        return "please provide all the fields, missing " + str(error)
+
+@api.route('/')  
 def index():
     """
     Index route test
@@ -149,35 +169,33 @@ def userrequests():
     userid = g.userid
     role = g.role
     if request.method == 'POST':
-        try:
-            request_details = request.get_json()
-            category = request_details['category']
-            description = request_details['description']
-            location = request_details['location']
-            date = request_details['date']
-            time = request_details['time']
-        except (ValueError, KeyError, TypeError) as error:
-            return jsonify(response="Make sure you are passing all \
-            the values and valid json data"), 400
+        request_details = request.get_json()
+        check_details = validdate_req_data(request_details)
+        if check_details is not "valid":
+            return jsonify({"message" : check_details}), 400
+        else:
+            if requestObj.valid_category(request_details['category']) is False:
+                
+                return jsonify(resp="Category should either be Maintenance, maintenance, Repair or repair")
+            else:
+                try:                
+                    category = request_details['category']
+                    description = request_details['description']
+                    location = request_details['location']
+                    req = Service(category, location, description, userid)
+                    res = req.add()
+                    return jsonify(response=res), 201
 
-        valid_category = request_object.valid_category(category)
-        if valid_category is True:
-            res = request_object.existing_request(
-                category, userid, date)
-            if res is False:
-                try:
-                    res = request_object.create(
-                        category, description, location, date, time, userid)
-
-                    return jsonify({"message": "Successfully Created",
-                                    "Request": res}), 201
-                except Exception:
-                    return jsonify(response="Error Creating Request"), 501
-            return jsonify(response="Request Already exists"), 409
-        return jsonify(response="Invalid Category. Category should either \
-        be maintenance or repair"), 400
-    requests = request_object.view_all(userid, role)
-    return jsonify(requests), 200
+                except Exception as error:
+                    #an error occured when trying to create request
+                    response = {'messageu' : str(error)}
+                    return jsonify(response), 401
+    if role == "Admin":
+        requests_list = requestObj.view_all() 
+        return jsonify(requests_list), 200
+    else:
+        requests_list = requestObj.fetch_by_userid(userid)
+        return jsonify(requests_list), 200
 
 
 @api.route('/users/requests/<reqid>', methods=['GET', 'PUT'])
