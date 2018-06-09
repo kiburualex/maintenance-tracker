@@ -117,7 +117,7 @@ def register():
             password = data['password']
             user = User(username, email, password)
             res = user.add()
-            return jsonify(res), 201
+            return jsonify({"message":"Registered Successfully","response":res}), 201
         except Exception as error:
             #an error occured when trying to register the user
             response = {'message' : str(error)}
@@ -182,7 +182,7 @@ def userrequests():
                     location = request_details['location']
                     req = Service(category, location, description, userid)
                     res = req.add()
-                    return jsonify(response=res), 201
+                    return jsonify({"message":"Successfully created","response":res}), 201
 
                 except Exception as error:
                     #an error occured when trying to create request
