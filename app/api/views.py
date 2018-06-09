@@ -1,7 +1,7 @@
 import uuid
 import re
 from app.jwtfile import Jwt_details
-from app.models import User, Store, Service
+from app.models import User, Service
 from flask import request, json, jsonify, url_for, \
     session, abort, render_template, g
 
@@ -338,3 +338,39 @@ def admin_delete(reqid):
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
 
+@api.route('/users')
+def admin_users():
+    """ Admin endpoint to view all registered users"""
+    if g.role == "Admin":
+        res = userObj.fetch_all()
+        return jsonify(res), 200
+    else:
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
+
+@api.route('/users/<username>')
+def admin_user(username):
+    """ Admin endpoint to view a registered user by useranme"""
+    if g.role == "Admin":
+        res = userObj.find_by_username(username)
+        if res:
+            return jsonify(res), 200
+        else:
+            return jsonify(response="Username not found")
+    else:
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
+
+@api.route('/users/<username>/admin')
+def make_admin(username):
+    """ Admin endpoint to grant a user admin rights"""
+    if g.role == "Admin":
+        res = userObj.find_by_username(username)
+        if res:
+            makeadmin = userObj.make_admin(username)
+            return jsonify({"message":"Successful","user":makeadmin})
+        else:
+            return jsonify(response="Username not found")
+    else:
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401

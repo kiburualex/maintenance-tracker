@@ -1,5 +1,5 @@
 # third-party imports
-from flask import Flask
+from flask import Flask, jsonify
 
 # local imports
 from config import app_config
@@ -14,15 +14,15 @@ def create_app(config_name):
 
     @app.errorhandler(403)
     def forbidden(error):
-        return "You do not have sufficient permissions \
-         to access this resources.", 403
+        return jsonify("You do not have sufficient permissions \
+         to access this resources."), 403
 
     @app.errorhandler(404)
     def page_not_found(error):
-        return "The resource you are looking For Doesnt exist", 404
+        return jsonify("The resource you are looking For Doesnt exist"), 404
 
     @app.errorhandler(500)
     def internal_server_error(error):
-        return "The server encountered an internal error.", 500
+        return jsonify("The server encountered an internal error."), 500
 
     return app
