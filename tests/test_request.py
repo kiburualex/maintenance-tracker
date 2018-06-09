@@ -6,7 +6,7 @@ from datetime import date, datetime
 from flask import abort, url_for
 
 from app import create_app
-from app.service import Services
+from app.models import Service
 from flask_testing import TestCase
 from app import create_app
 from migrate import create_requests
@@ -26,7 +26,7 @@ class RequestTests(TestBase):
 
     def setUp(self):
         """ Set up request object before each test"""
-        self.request = Services()
+        self.request = Service()
         create_requests()
 
     def tearDown(self):
@@ -35,37 +35,50 @@ class RequestTests(TestBase):
 
     def test_isuccessful_created(self):
         """Test if request can create sucessfully with correct fields"""
-        res = self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1")
+        res = Service("maintenance", "request descriptions", "location", "1")
+        req = res.add()
         request_d = dict(
             id=1
             )
-        self.assertEqual(res['id'], request_d['id'])
+        self.assertEqual(req['id'], request_d['id'])
 
-    def test_create_existing_request(self):
-    	""" Test if a request can be created twice"""
-    	
-    	self.request.create("maintenance", "request descriptions",\
-         "location", "2018-6-5", "10:20 AM", "1",)
-    	res = self.request.existing_request("maintenance", "1",\
-         "2018-6-5")
-    	self.assertEqual(res, True)
+    def test_fetch_by_userid(self):
+        """Test if filter by userid works"""
+        res1 = Service("maintenance", "request descriptions", "location", "1")
+        req = res1.add()
+        res2 = Service("maintenance", "request descriptions", "location", "1")
+        req = res2.add()
+        res = self.request.fetch_by_userid("1")
+        request_description = len(res)
+        self.assertEqual(request_description, 2)
 
-    def test_request_filter(self):
-    	"""Test if filter by userid works"""
-    	self.request.create("maintenance", "request descriptions",\
-         "location", "2018-6-5", "10:20 AM", "1",)
-    	self.request.create("maintenance", "request descriptions",\
-         "location", "2018-6-5", "10:20 AM", "2",)
-    	res = self.request.view_all("1", "Normal")
-    	request_description = res[0]['description']
-    	self.assertEqual(request_description, "request descriptions")
-
-    def test_filter_by_id(self):
+    def test_fetch_by_id(self):
         """Test if the method finds the exactly specified id"""
-        self.request.create("maintenance", "request descriptions", "location", "2018-6-5", "10:20 AM", "1")
-        foundrequest = self.request.find_by_id(1)
+        res = Service("maintenance", "request descriptions", "location", "1")
+        req = res.add()
+        foundrequest = self.request.fetch_by_id(1)
         self.assertEqual(foundrequest['id'], 1)
-    
+        self.assertFalse(self.request.fetch_by_id(4), False)
+
+    def test_view_all(self):
+        """Test if view all works"""
+        res1 = Service("maintenance", "request descriptions", "location", "1")
+        res1.add()
+        res2 = Service("maintenance", "request descriptions", "location", "1")
+        res2.add()
+        res = self.request.view_all()
+        count = len(res)
+        self.assertEqual(count, 2)
+
+    def test_is_owner(self):
+        """Test if reuest belong to a user"""
+        res = Service("maintenance", "request descriptions", "location", "1")
+        req = res.add()
+        foundrequest = self.request.is_owner(1, 1)
+        self.assertEqual(foundrequest, True)
+        self.assertFalse(self.request.is_owner(1, 2), False)
+
+
     def test_valid_category(self):
         """Test if the method can detect valid category"""
         res = self.request.valid_category("maintenance")
@@ -75,4 +88,3 @@ class RequestTests(TestBase):
         """Test if the method can detect invalid category"""
         res = self.request.valid_category("other")
         self.assertEqual(res, False)
-     

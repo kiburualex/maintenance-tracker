@@ -10,8 +10,8 @@ def create_users():
         
         cur = conn.cursor()
         cur.execute("DROP TABLE IF EXISTS users")
-        cur.execute("CREATE TABLE users(id serial PRIMARY KEY, email varchar,\
-         username varchar, role varchar, password varchar);")
+        cur.execute("CREATE TABLE users(id serial PRIMARY KEY, username varchar, \
+          email varchar,role varchar, password varchar);")
          #create ADmin user
         password = sha256_crypt.encrypt("pass123")
         cur.execute("INSERT INTO users( username, email, role, password) VALUES (%s, %s, %s, %s)",\
@@ -32,7 +32,7 @@ def create_requests():
         cur = conn.cursor()
         cur.execute("DROP TABLE IF EXISTS requests")
         cur.execute("CREATE TABLE requests(id serial PRIMARY KEY, user_id integer, \
-        category varchar, location varchar, req_date date, req_time time, description varchar, \
+        category varchar, location varchar, req_date date, description varchar, \
         status varchar, isresolved boolean);")
         print("Table requests Successfullyn Created")
         conn.commit()

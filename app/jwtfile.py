@@ -13,7 +13,7 @@ class Jwt_details(object):
         try:
             # set up a payload
             payload = {
-                'exp': datetime.utcnow() + timedelta(minutes=5),
+                'exp': datetime.utcnow() + timedelta(minutes=50),
                 'iat': datetime.utcnow(),
                 'sub': userid
             }
