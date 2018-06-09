@@ -225,6 +225,16 @@ class Service(Store):
         self.save()
         return self.fetch_by_id(reqid)
 
+    def resolve(self, reqid):
+        """ A method to Disapprove requests """
+        status = "Resolved"
+        isresolved = True
+        self.cur.execute(
+            "UPDATE requests SET status = %s, isresolved = %s WHERE id \
+                = %s;", (status, isresolved, reqid))
+        self.save()
+        return self.fetch_by_id(reqid)
+
     def serializer(self, item):
         return dict(
             id=item[0],
