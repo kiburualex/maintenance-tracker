@@ -23,22 +23,28 @@ A user can perform the following :
 
 * On the browser,visit the following url
     
-     * [Mtracker](http://mtracker28.herokuapp.com/api/v1/users/)
+     * [Mtracker](http://mtracker28.herokuapp.com/api/v2/)
     
 * To interact with the API via Postman, use the link below
     
-    * http://mtracker28.herokuapp.com/api/v1/users/
+    * http://mtracker28.herokuapp.com/api/v2/
 
     then use the following endpoints to perform the specified tasks
     
     EndPoint                            | Functionality
     ------------------------            | ----------------------
-    POST /register                      | Create a user account
-    POST /login                         | Log in a user
-    POST /requests                      | Create a request
-    GET /requests                       | Retrieve existing user's requests
-    PUT /requests/< reqid >             | Update a requests 
-    GET  /requests/< reqid >            | Retrieve a requests
+    POST /auth/register                 | Create a user account
+    POST /auth/login                    | Log in a user
+    POST /users/requests                | Create a request
+    GET /users/requests                 | Retrieve existing user's requests
+    PUT /users/requests/< reqid >       | Update a requests 
+    GET  /users/requests/< reqid >      | Retrieve a requests
+    GET /requests                       | Admin Endpoint TO all requests
+    GET /reuests/<reqid>                | Admin Endpoint To view individual request
+    GET /requests/<reqid>resolve        | Admin Endpoint To resolve a request
+    GET /requests/<reqid>approve        | Admin Endpoint To approve a request
+    GET /requests/<reqid>disapprove     | Admin Endpoint To disapprove a request
+    GET /requests/<reqid>delete         | Admin Endpoint To delete a request
 
 
 # UI
