@@ -338,3 +338,13 @@ def admin_delete(reqid):
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
 
+
+@api.route('/users')
+def admin_users():
+    """ Admin endpoint to view all registered users"""
+    if g.role == "Admin":
+        res = userObj.fetch_all()
+        return jsonify(res), 200
+    else:
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
