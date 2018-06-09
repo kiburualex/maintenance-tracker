@@ -235,7 +235,7 @@ def get_request(reqid):
 def admin_requests():
     """ Admin endpoint to view all users requests"""
     if g.role == "Admin":
-        res = request_object.view_all(g.userid, g.role)
+        res = requestObj.view_all()
         return jsonify(res), 200
     else:
         return jsonify(response="Sorry you don't have enough \
