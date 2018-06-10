@@ -96,6 +96,7 @@ class TestViews(TestBase):
         """"
         Test for wrong login credentials
         """
+        # Register user
         resource = self.client.post('api/v2/auth/register', data=json.dumps(dict(username="dan",email='info@gmail.com', password='pass123', cnfpass='pass123'
                                                                                  )), content_type='application/json')
 
@@ -104,6 +105,7 @@ class TestViews(TestBase):
         self.assertEqual(resource.content_type, 'application/json')
         self.assertEqual(data['message'], 'Registered Successfully')
 
+        # Login user
         resource = self.client.post('api/v2/auth/login', data=json.dumps(dict(username="dan", password='pass12'
                                                                                  )), content_type='application/json')
 
@@ -156,18 +158,21 @@ class TestViews(TestBase):
         self.assertEqual(request_resource.content_type, 'application/json')
         self.assertEqual(resource.status_code, 201)
         self.assertEqual(data["message"], "Successfully created")
+       
         """ Invalid Category """
         request_resource = self.client.post('/api/v2/users/requests', data=json.dumps(dict(category="Other", description="description goes here", location="Mombasa"
                                                                                              )),headers=headers)
         data = json.loads(request_resource.data.decode())
         self.assertEqual(request_resource.content_type, 'application/json')
         self.assertEqual(data["resp"], "Category should either be Maintenance, maintenance, Repair or repair")
+       
         """View a particular requests """
         request_resource = self.client.get(
             '/api/v2/users/requests/1', headers=headers)
         data = json.loads(request_resource.data.decode())
         requests = data["location"]
         self.assertEqual(request_resource.status_code, 200)
+        self.assertEqual(data["user_id"], 1)
          
         """ Update someone requests """
         request_resource = self.client.put('/api/v2/users/requests/1', data=json.dumps(dict(category="Repair", description="description goes here", location="Mombasa"
@@ -175,6 +180,19 @@ class TestViews(TestBase):
         data = json.loads(request_resource.data.decode())
         self.assertEqual(request_resource.content_type, 'application/json')
         self.assertEqual(data["message"], "Sorry you cant edit this request")
+        
+        """ Admin Requests """
+        request_resource = self.client.get('/api/v2/requests', headers=headers)
+        data = json.loads(request_resource.data.decode())
+        self.assertEqual(data["response"], "Sorry you don't have enough \
+        rights to view this resource")
+
+        # Log out user
+        resource = self.client.get('api/v2/auth/logout', headers=headers)
+
+        data = json.loads(resource.data.decode())
+        self.assertEqual(data['message'], 'logout successfuly.')
+
 
 if __name__ == '__main__':
     unittest.main()
