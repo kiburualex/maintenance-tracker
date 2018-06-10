@@ -12,6 +12,7 @@ Maintenance Tracker App is an application that provides users with the ability t
 You can create a user by sennding a json request with username, 
 , password, and password confirmation. password must be atleast 6 characters long.
 
+
 + Request(application/json)
 
             {
@@ -137,6 +138,29 @@ Request should include Authorization header and access token
             }
         ]
         
+## Single request [/requests/<reqid>]
+
+### one request [PUT]
+
+User can view a request by id
+
++ Response 200 (application/json)
+
+            {
+                "category":"maintenance",
+                "description" : "request description",
+                "date":"2018-6-20",
+                "id" : "2be47f9a-d733-11e7-920a-bc8556ecad23",
+                "location":"location",
+                "userid": "2be47f4g-d733-11e7-920a-bc8556ecad23"
+            }
+            
++ Response 404 (application/json)
+
+            {
+                "response" : "no request with given id"
+            }
+
 ## update request [/requests/<reqid>]
 
 ### update request [PUT]
@@ -175,6 +199,7 @@ you can update a request by sending the request id together with the new categor
                 "response" : "no request with given id"
             }
             
+           
 
 ## All Requests [/requests]
 ### Fetch all users requests [GET]
@@ -330,6 +355,108 @@ Admin can delete requests from all the registered users .Only accessible to admi
             "response": "Request doesn't exist"
         }
 
++ Response 401 (application/json)
+
+        {
+            "response": "Sorry you don't have enough rights to view this resource"
+        }
+        
+## All Users [/users]
+### Fetch all users  [GET]
+
+Admin can view all the registered users .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+            {
+                "email": "Admin",
+                "id": 1,
+                "name": "root@gmail.com",
+                "password": "$5$rounds=535000$66qg0aLDpuzvhTKS$xt09qoM3kTz.u85BMEdkE5yp1D5Cs7xdqcBt8j/QAY/",
+                "username": "dess"
+            },
+            {
+                "email": "Normal",
+                "id": 2,
+                "name": "desmond@mail.com",
+                "password": "$5$rounds=535000$dTlKqULHhOCdQQz4$f48509J8dD6GRmzvNul/TO9dtqXuxVJp9huN46Ez0w9",
+                "username": "desmond"
+            },
+            {
+                "email": "Normal",
+                "id": 3,
+                "name": "info@gmail.com",
+                "password": "$5$rounds=535000$o0/NVGZ6Eq7EU91E$6.SWISvBfKlEUaNwfSgnOdD7lOjyLqAP6mMFW3KOVF3",
+                "username": "dan"
+            }
+        ]
+        
++ Response 401 (application/json)
+
+        {
+            "response": "Sorry you don't have enough rights to view this resource"
+        }
+        
+## View User Details [/users/<userid>]
+### Fetch One user  [GET]
+
+Admin can view details of a single user .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+            {
+                "email": "Admin",
+                "id": 1,
+                "name": "root@gmail.com",
+                "password": "$5$rounds=535000$66qg0aLDpuzvhTKS$xt09qoM3kTz.u85BMEdkE5yp1D5Cs7xdqcBt8j/QAY/",
+                "username": "dess"
+            }
+        
++ Response 404 (application/json)
+
+        {
+            "response": "User doesn't exist"
+        }
+
+        
++ Response 401 (application/json)
+
+        {
+            "response": "Sorry you don't have enough rights to view this resource"
+        }
+        
+## Make Admin [/users/<userid>/admin]
+### Make user admin  [GET]
+
+Admin can can make a user an admin .Only accessible to admin
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+         {
+           "message" : "Successful",
+           {
+                "email": "Admin",
+                "id": 1,
+                "name": "root@gmail.com",
+                "password": "$5$rounds=535000$66qg0aLDpuzvhTKS$xt09qoM3kTz.u85BMEdkE5yp1D5Cs7xdqcBt8j/QAY/",
+                "username": "dess"
+            }
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "response": "User doesn't exist"
+        }
+
+        
 + Response 401 (application/json)
 
         {
