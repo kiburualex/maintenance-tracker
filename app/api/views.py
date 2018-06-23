@@ -134,8 +134,8 @@ def login():
         user = userObj.find_by_username(user_details['username'])
         if user and userObj.verify_password(user_details['password'], user['password']):
             auth_token = jwt_obj.generate_auth_token(user["id"])
-            return jsonify({"user": user, "message": "Login Successfull.\
-            ", "Access token": auth_token}), 201
+            return jsonify({"user": user, "message": "Login Successfull."\
+            , "Access token": auth_token}), 201
         else:
             #no user found, return an error message
             response = {'message': 'invalid username or password, \
@@ -143,7 +143,7 @@ def login():
             return jsonify(response), 401
     except Exception as error:
                     #an error occured when trying to create request
-                    response = {'messageu' : str(error)}
+                    response = {'message' : str(error)}
                     return jsonify(response), 401
 
 @api.route('/auth/logout')
