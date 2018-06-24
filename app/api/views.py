@@ -31,8 +31,8 @@ def before_request():
             return jsonify({"message": "Please register or \
             login to continue"}), 401
         except Exception as e:
-            return jsonify(response="Authorization header or \
-            acess token is missing."), 400
+            return jsonify({"message":"Authorization header or \
+            acess token is missing."}), 400
 
 def validdate_data(data):
     """validate user details"""
