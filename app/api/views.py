@@ -15,21 +15,23 @@ requestObj = Service()
 def before_request():
     """get the user bafore every request"""
     if request.endpoint and 'auth' not in request.url:
+             
         try:
-            auth_header = request.headers.get('Authorization')
-            g.user = None
-            access_token = auth_header.split(" ")[1]
-            res = jwt_obj.decode_auth_token(access_token)
-            if isinstance(res, int) and not jwt_obj.is_blacklisted(access_token):
-                # check if no error in string format was returned
-                # find the user with the id on the token
-                user = User()
-                res = userObj.user_by_id(id=res)
-                g.userid = res['id']
-                g.role = res['role']
-                return
-            return jsonify({"message": "Please register or \
-            login to continue"}), 401
+            if request.method != 'OPTIONS':
+                auth_header = request.headers.get('authorization')
+                g.user = None
+                access_token = auth_header.split(" ")[1]
+                res = jwt_obj.decode_auth_token(access_token)
+                if isinstance(res, int) and not jwt_obj.is_blacklisted(access_token):
+                    # check if no error in string format was returned
+                    # find the user with the id on the token
+                    user = User()
+                    res = userObj.user_by_id(id=res)
+                    g.userid = res['id']
+                    g.role = res['role']
+                    return
+                return jsonify({"message": "Please register or \
+                login to continue"}), 401
         except Exception as e:
             return jsonify({"message":"Authorization header or \
             acess token is missing."}), 400
@@ -77,32 +79,29 @@ def validdate_req_data(data):
         if not re.match("^[a-zA-Z0-9_ ]*$", data['category'].strip()) :
             return "Should only contain alphanemeric characters"
         #check if the uDescription Must Be more than 10 characters
-        elif len(data['description'].strip()) < 10 or not \
-        re.match("^[a-zA-Z0-9_ ]*$", data['description'].strip()):
-            return "Description should only contain alphanemeric characters\
-             Must Be more than 10 characters"
+        elif len(data['description'].strip()) < 10 :
+            return "Description Must Be more than 10 characters"
         #check if the location contains only numbers or underscore
-        elif not re.match("^[a-zA-Z0-9_]*$", data['location'].strip()):
-            return "location should only contain alphanemeric characters\
-            and have atleast 3 letters"
+        elif len(data['location'].strip()) < 3:
+            return "location must be more than 2 letters"
         else:
             return "valid"
     except Exception as error:
         return "please provide all the fields, missing " + str(error)
 
-@api.route('/')
+@api.route('/check')
 def index():
     """
     Index route test
     """
-    return render_template('index.html'), 200
+    return jsonify({"message" : "Authenticated"}), 200
 
 
 @api.route('/auth/register', methods=['POST'])
 def register():
     """A route to handle user registration"""
-
     data = request.get_json()
+    print(data['username'])
     #validate the data
     res = validdate_data(data)
     check_pass = validate_password(data)
@@ -166,8 +165,10 @@ def logout():
 def userrequests():
     userid = g.userid
     role = g.role
+    
     if request.method == 'POST':
         request_details = request.get_json()
+        print(request_details['category'])
         check_details = validdate_req_data(request_details)
         if check_details is not "valid":
             return jsonify({"message" : check_details}), 400
@@ -190,10 +191,10 @@ def userrequests():
                     return jsonify(response), 401
     if role == "Admin":
         requests_list = requestObj.view_all()
-        return jsonify(requests_list), 200
+        return jsonify(response=requests_list), 200
     else:
         requests_list = requestObj.fetch_by_userid(userid)
-        return jsonify(requests_list), 200
+        return jsonify(response=requests_list), 200
 
 
 @api.route('/users/requests/<reqid>', methods=['GET', 'PUT'])
@@ -227,6 +228,20 @@ def get_request(reqid):
         return jsonify({"message" : "The request doesnt exist"}), 404
     else:
         return jsonify(item), 200
+
+
+@api.route('/dashboard')
+def admin_dashboard():
+    """ Admin dashboard """
+    if g.role == "Admin":
+        pending = requestObj.fetch_by_status("Pending")
+        approved = requestObj.fetch_by_status("Approved")
+        users = userObj.fetch_all()
+        return jsonify({"pending":pending, "approved":approved, "users":users}), 200
+    else:
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
+
 
 
 @api.route('/requests')
@@ -302,9 +317,7 @@ def admin_resolve(reqid):
             return jsonify(response="Request doesnt exists"), 404
         else:
             if isexist['isresolved'] is True:
-                return jsonify({"request":isexist,"response":"Request ist already resolved"}), 409
-            elif isexist['status'] is not "Pending" or isexist['status'] is not "Disapproved":
-                return jsonify({"request":isexist,"response":"You can only resolve approved Requests"}), 409
+                return jsonify({"request":isexist,"message":"Request ist already resolved"}), 409
             else:
                 try:
                     resp = requestObj.resolve(reqid)

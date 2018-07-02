@@ -72,8 +72,8 @@ class User(object):
         return dict(
             id=user[0],
             username=user[1],
-            name=user[2],
-            email=user[3],
+            email=user[2],
+            role=user[3],
             password=user[4]
         )
 
@@ -98,6 +98,7 @@ class User(object):
 
     def serialiser_user(self, user):
         """ Serialize tuple into dictionary """
+        print()
         user_details = dict(
             id=user[0],
             username=user[1],
@@ -176,7 +177,6 @@ class Service(object):
             return True
         return False
 
-
     def fetch_by_userid(self, user_id):
         cur.execute(
             "SELECT * FROM requests WHERE user_id=%s", (user_id, ))
@@ -184,6 +184,14 @@ class Service(object):
         if requests_tuple:
             return [self.serializer(request) for request in requests_tuple]
         return "You have no requests yet"
+
+    def fetch_by_status(self, status):
+        cur.execute(
+            "SELECT * FROM requests WHERE status=%s", (status, ))
+        requests_tuple = cur.fetchall()
+        if requests_tuple:
+            return [self.serializer(request) for request in requests_tuple]
+        return []
 
     def update(self, reqid):
         cur.execute("UPDATE requests SET category = %s, description \
@@ -233,9 +241,9 @@ class Service(object):
             id=item[0],
             user_id=item[1],
             category=item[2],
-            location=item[3],
+            location=item[5],
             date=item[4],
-            description=item[5],
+            description=item[3],
             status=item[6],
             isresolved=item[7]
         )
