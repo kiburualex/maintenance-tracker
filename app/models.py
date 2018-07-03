@@ -59,8 +59,7 @@ class User(object):
             return self.serializer(user)
         return False
 
-    def make_admin(self, username):
-        role = "Admin"
+    def make_admin(self, username, role):
         cur.execute("UPDATE users SET role = %s\
          WHERE username = %s;", (role, username)
         )

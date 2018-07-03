@@ -380,8 +380,13 @@ def make_admin(username):
     if g.role == "Admin":
         res = userObj.find_by_username(username)
         if res:
-            makeadmin = userObj.make_admin(username)
-            return jsonify({"message":"Successful","user":makeadmin})
+            if res['role'] == "Admin":
+                makeadmin = userObj.make_admin(username, "Normal")
+                return jsonify({"message":"Successful","user":makeadmin})
+            else:
+                makeadmin = userObj.make_admin(username, "Admin")
+                return jsonify({"message":"Successful","user":makeadmin})
+
         else:
             return jsonify(response="Username not found")
     else:
