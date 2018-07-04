@@ -1,17 +1,20 @@
 FORMAT: 1A
+
 HOST: http://mtracker28.herokuapp.com/api/v2/
+
 
 # mtracker
 
 Maintenance Tracker App is an application that provides users with the ability to reach out to operations or repairs department.
 
+
 ## User Registration [/auth/register]
+
 
 ### Register a new user [POST]
 
 You can create a user by sennding a json request with username, 
 , password, and password confirmation. password must be atleast 6 characters long.
-
 
 + Request(application/json)
 
@@ -48,6 +51,7 @@ You can create a user by sennding a json request with username,
 
 ## Login [/auth/login]
 
+
 ### Login a user [POST]
 
 you can login a user by sending their username and password
@@ -62,6 +66,7 @@ you can login a user by sending their username and password
 + Response 200 (application/json)
 
             {
+
                 "Access token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1Mjg1MzYzNjIsInN1YiI6MSwiZXhwIjoxNTI4NTM5MzYyfQ.fzS9f1diVTebrM5vTIMFuFPpa420iKFVkl90Z2fNlWM",
                 "message": "Login Successfull.            ",
                 "user": {
@@ -73,11 +78,6 @@ you can login a user by sending their username and password
                 }
             }
                         
-+ Response 403 (application/json)
-
-            {
-                "response" : "wrong username or password"
-            }
 
 ## requests [/users/requests]
 
@@ -92,12 +92,15 @@ Request should include Authorization header and access token
                 "category":"category",
                 "description" : "request description",
                 "location":"location"
+
             }
             
 + Response 201 (application/json)
 
             {
+
                 "response" : "Request Created successfully"
+
             }
             
 + Response 409 (application/json)
@@ -138,6 +141,7 @@ Request should include Authorization header and access token
             }
         ]
         
+
 ## Single request [/requests/<reqid>]
 
 ### one request [PUT]
@@ -173,6 +177,7 @@ you can update a request by sending the request id together with the new categor
                 "category":"category",
                 "description" : "request description",
                 "location":"location"
+
             }
             
 + Response 200 (application/json)
@@ -197,6 +202,7 @@ you can update a request by sending the request id together with the new categor
 
             {
                 "response" : "no request with given id"
+
             }
             
            
