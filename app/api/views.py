@@ -15,7 +15,7 @@ requestObj = Service()
 def before_request():
     """get the user bafore every request"""
     if request.endpoint and 'auth' not in request.url:
-             
+
         try:
             if request.method != 'OPTIONS':
                 auth_header = request.headers.get('authorization')
@@ -165,7 +165,7 @@ def logout():
 def userrequests():
     userid = g.userid
     role = g.role
-    
+
     if request.method == 'POST':
         request_details = request.get_json()
         print(request_details['category'])
