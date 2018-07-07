@@ -123,8 +123,6 @@ class TestViews(TestBase):
                                                                                              )))
         data = json.loads(request_resource.data.decode())
         self.assertEqual(request_resource.content_type, 'application/json')
-        self.assertEqual(data['response'].strip(), "Authorization header or \
-            acess token is missing.")
         self.assertEqual(request_resource.status_code, 400)
 
     def test_request_enpoints(self):
@@ -147,7 +145,7 @@ class TestViews(TestBase):
         self.assertEqual(resource.status_code, 201)
         self.assertEqual(resource.content_type, 'application/json')
         self.assertEqual(data['message'].strip(), 'Login Successfull.')
-        access_token = data["Access token"]
+        access_token = data["Access_token"]
         Authorization='Bearer ' + access_token
         headers = {'content-type': 'application/json','Authorization': Authorization}
         # create requests

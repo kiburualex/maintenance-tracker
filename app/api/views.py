@@ -15,7 +15,7 @@ requestObj = Service()
 def before_request():
     """get the user bafore every request"""
     if request.endpoint and 'auth' not in request.url:
-             
+
         try:
             if request.method != 'OPTIONS':
                 auth_header = request.headers.get('authorization')
@@ -165,7 +165,7 @@ def logout():
 def userrequests():
     userid = g.userid
     role = g.role
-    
+
     if request.method == 'POST':
         request_details = request.get_json()
         print(request_details['category'])
@@ -250,6 +250,19 @@ def admin_requests():
     if g.role == "Admin":
         res = requestObj.view_all()
         return jsonify(res), 200
+    else:
+        return jsonify(response="Sorry you don't have enough \
+        rights to view this resource"), 401
+
+
+@api.route('/requests/search', methods=['POST'])
+def admin_search():
+    """ Admin dashboard """
+    if g.role == "Admin":
+        request_details = request.get_json()
+        print(request_details['status'])
+        data = requestObj.fetch_by_status_category(request_details['status'], request_details['category'])
+        return jsonify({"data":data}), 200
     else:
         return jsonify(response="Sorry you don't have enough \
         rights to view this resource"), 401
