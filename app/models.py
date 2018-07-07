@@ -17,12 +17,6 @@ class User(object):
     def save(self):
         conn.commit()
 
-    def create(self):
-        self.create_table("CREATE TABLE users(id serial PRIMARY KEY, email varchar\
-          NOT NULL UNIQUE, username varchar NOT NULL UNIQUE, role varchar NOT NULL,\
-           password varchar NOT NULL);"
-        )
-
     def add(self):
         if self.username_exist(self.username) is False:
             hash_pass = self.hash_password(self.password)
@@ -130,11 +124,6 @@ class Service(object):
     def save(self):
         conn.commit()
 
-    def create(self):
-        self.create_table("CREATE TABLE requests(id serial PRIMARY KEY, user_id integer, \
-        category varchar, location varchar, req_date date, description varchar, \
-        status varchar, isresolved boolean);")
-
     def add(self):
         cur.execute("INSERT INTO requests(user_id, category,\
         location, req_date, description, status,\
@@ -187,6 +176,14 @@ class Service(object):
     def fetch_by_status(self, status):
         cur.execute(
             "SELECT * FROM requests WHERE status=%s", (status, ))
+        requests_tuple = cur.fetchall()
+        if requests_tuple:
+            return [self.serializer(request) for request in requests_tuple]
+        return []
+
+    def fetch_by_status_category(self, status, category):
+        cur.execute(
+            "SELECT * FROM requests WHERE status=%s AND category=%s", (status, category ))
         requests_tuple = cur.fetchall()
         if requests_tuple:
             return [self.serializer(request) for request in requests_tuple]
