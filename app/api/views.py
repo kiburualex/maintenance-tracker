@@ -184,22 +184,22 @@ def userrequests():
             if requestObj.valid_category(request_details['category']) is False:
 
                 return jsonify(resp="Category should either be Maintenance, maintenance, Repair or repair")
-            elif requestObj.ifExist(request_details['category'], request_details['location'], request_details['description']) is True:
-
-                return jsonify(resp="Similar Request Is still pending")
             else:
-                try: 
-                    category = request_details['category']
-                    description = request_details['description']
-                    location = request_details['location']
-                    req = Service(category, location, description, userid)
-                    res = req.add()
-                    return jsonify({"message": "Successfully created", "response": res}), 201
+                if requestObj.ifExist(request_details['category'], request_details['location'], request_details['description']) is True:
+                    return jsonify(resp="Similar Request Is still pending")
+                else:
+                    try: 
+                        category = request_details['category']
+                        description = request_details['description']
+                        location = request_details['location']
+                        req = Service(category, location, description, userid)
+                        res = req.add()
+                        return jsonify({"message": "Successfully created", "response": res}), 201
 
-                except Exception as error:
-                    # an error occured when trying to create request
-                    response = {'messageu': str(error)}
-                    return jsonify(response), 401
+                    except Exception as error:
+                        # an error occured when trying to create request
+                        response = {'messageu': str(error)}
+                        return jsonify(response), 401
     if role == "Admin":
         requests_list = requestObj.view_all()
         return jsonify(response=requests_list), 200
