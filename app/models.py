@@ -189,10 +189,10 @@ class Service(object):
             return [self.serializer(request) for request in requests_tuple]
         return []
 
-    def ifExist(self, category, location, description):
+    def ifExist(self, category, user_id):
         status = "Pending"
         cur.execute(
-            "SELECT * FROM requests WHERE status=%s AND category=%s AND location=%s AND description=%s" , (status, category, location, description ))
+            "SELECT * FROM requests WHERE user_id=%s AND category=%s AND status=%s" , (user_id, category, status))
         requests_tuple = cur.fetchall()
         if requests_tuple:
             return True
