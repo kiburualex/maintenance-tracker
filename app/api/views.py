@@ -185,8 +185,8 @@ def userrequests():
 
                 return jsonify(resp="Category should either be Maintenance, maintenance, Repair or repair")
             else:
-                if requestObj.ifExist(request_details['category'], request_details['location'], request_details['description'], userid) is True:
-                    return jsonify({"message": "Similar Request Is still pending"})
+                if requestObj.ifExist(request_details['category'], userid) is True:
+                    return jsonify({"message": "Request with the same category Is still pending"})
                 else:
                     try: 
                         category = request_details['category']
