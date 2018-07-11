@@ -189,6 +189,15 @@ class Service(object):
             return [self.serializer(request) for request in requests_tuple]
         return []
 
+    def ifExist(self, category, user_id):
+        status = "Pending"
+        cur.execute(
+            "SELECT * FROM requests WHERE user_id=%s AND category=%s AND status=%s" , (user_id, category, status))
+        requests_tuple = cur.fetchall()
+        if requests_tuple:
+            return True
+        return False
+
     def update(self, reqid):
         cur.execute("UPDATE requests SET category = %s, description \
             = %s, location = %s, req_date = %s WHERE id \
