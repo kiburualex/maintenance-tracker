@@ -192,8 +192,7 @@ class Service(object):
     def ifExist(self, category, location, description, user_id):
         status = "Pending"
         cur.execute(
-            "SELECT * FROM requests WHERE user_id=%s AND category=%s AND description=%s AND location=%s AND status=%s", (user_id, category,
-                description, location, status))
+            "SELECT * FROM requests WHERE user_id=%s AND category=%s AND location=%s AND status=%s", (user_id, category, location, status))
         requests_tuple = cur.fetchall()
         if requests_tuple:
             return True
