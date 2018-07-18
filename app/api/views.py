@@ -176,7 +176,7 @@ def userrequests():
 
     if request.method == 'POST':
         request_details = request.get_json()
-        print(request_details['category'])
+        print(request_details['description'])
         check_details = validdate_req_data(request_details)
         if check_details is not "valid":
             return jsonify({"message": check_details}), 400
