@@ -193,8 +193,7 @@ class Service(object):
         status = "Pending"
         print(description)
         cur.execute(
-            "SELECT * FROM requests WHERE user_id=%s AND description=%s AND
-            status=%s", (user_id, description, status))
+            "SELECT * FROM requests WHERE user_id=%s AND description=%s AND status=%s", (user_id, description, status))
         requests_tuple = cur.fetchall()
         if requests_tuple:
             return True
